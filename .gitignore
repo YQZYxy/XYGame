@@ -11,8 +11,6 @@ Content/StartContent/
 ThirdParty/
 Build/
 
-Source/YQZY
-!Source/YQZY/Game/*
 #files
 
 *.vscode
