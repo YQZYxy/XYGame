@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Config/TaskConfig/TaskConfig.h"
+#include "Game/Config/TaskConfig/TaskConfig.h"
 #include "YQZYLog.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(TaskConfig)

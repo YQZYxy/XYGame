@@ -1,7 +1,7 @@
 #include "EventHandlerManager.h"
 #include "YQZYLog.h"
 #include "Character/YQZYCharacter.h"
-#include "Struct/TaskData.h"
+#include "Game/Struct/TaskData.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(EventHandlerManager)
 

@@ -1,8 +1,8 @@
 #include "LogicConfigManager.h"
 #include "YQZYLog.h"
 #include "LogicConFig.h"
-#include "Config/Weaponconfig/Weaponconfig.h"
-#include "Config/TaskConfig/TaskConfig.h"
+#include "Game/Config/Weaponconfig/Weaponconfig.h"
+#include "Game/Config/TaskConfig/TaskConfig.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(LogicConfigManager)
 

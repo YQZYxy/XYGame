@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
-#include "Struct/RoleModuleData.h"
-#include "Struct/TaskData.h"
+#include "Game/Struct/RoleModuleData.h"
+#include "Game/Struct/TaskData.h"
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "TaskComponent.generated.h"

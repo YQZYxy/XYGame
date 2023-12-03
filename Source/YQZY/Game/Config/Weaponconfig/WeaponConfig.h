@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Config/LogicConfig.h"
+#include "Game/Config/LogicConfig.h"
 #include "CoreMinimal.h"
 #include "WeaponConfig.generated.h"
 

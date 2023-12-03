@@ -1,7 +1,7 @@
 #include "TaskComponent.h"
 #include "YQZYLog.h"
-#include "Config/TaskConfig/TaskConfig.h"
-#include "Config/LogicConfigManager.h"
+#include "Game/Config/TaskConfig/TaskConfig.h"
+#include "Game/Config/LogicConfigManager.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(TaskComponent)
 

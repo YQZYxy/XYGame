@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Config/LogicConfig.h"
+#include "Game/Config/LogicConfig.h"
 #include "LogicConfigManager.generated.h"
 
 USTRUCT(BlueprintType)
