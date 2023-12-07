@@ -27,7 +27,7 @@ class SWidget;
 
 #define LOCTEXT_NAMESPACE "YQZYEditor"
 
-DEFINE_LOG_CATEGORY(LogYQZYEditor);
+DEFINE_LOG_CATEGORY(YQZYLogEditor);
 
 // This function tells the GameplayCue editor what classes to expose when creating new notifies.
 static void GetGameplayCueDefaultClasses(TArray<UClass*>& Classes)

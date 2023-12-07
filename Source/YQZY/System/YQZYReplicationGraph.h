@@ -8,7 +8,7 @@
 
 class AGameplayDebuggerCategoryReplicator;
 
-DECLARE_LOG_CATEGORY_EXTERN(LogYQZYRepGraph, Display, All);
+DECLARE_LOG_CATEGORY_EXTERN(YQZYLogRepGraph, Display, All);
 
 /** YQZY Replication Graph implementation. See additional notes in YQZYReplicationGraph.cpp! */
 UCLASS(transient, config=Engine)

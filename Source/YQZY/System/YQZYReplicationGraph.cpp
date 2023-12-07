@@ -104,7 +104,7 @@
 #include "Character/YQZYCharacter.h"
 #include "Player/YQZYPlayerController.h"
 
-DEFINE_LOG_CATEGORY( LogYQZYRepGraph );
+DEFINE_LOG_CATEGORY( YQZYLogRepGraph );
 
 namespace YQZY::RepGraph
 {
@@ -155,11 +155,11 @@ namespace YQZY::RepGraph
 			// Enable/Disable via developer settings
 			if (YQZYRepGraphSettings && YQZYRepGraphSettings->bDisableReplicationGraph)
 			{
-				UE_LOG(LogYQZYRepGraph, Display, TEXT("Replication graph is disabled via YQZYReplicationGraphSettings."));
+				UE_LOG(YQZYLogRepGraph, Display, TEXT("Replication graph is disabled via YQZYReplicationGraphSettings."));
 				return nullptr;
 			}
 
-			UE_LOG(LogYQZYRepGraph, Display, TEXT("Replication graph is enabled for %s in world %s."), *GetNameSafe(ForNetDriver), *GetPathNameSafe(World));
+			UE_LOG(YQZYLogRepGraph, Display, TEXT("Replication graph is enabled for %s in world %s."), *GetNameSafe(ForNetDriver), *GetPathNameSafe(World));
 
 			TSubclassOf<UYQZYReplicationGraph> GraphClass = YQZYRepGraphSettings->DefaultReplicationGraphClass.TryLoadClass<UYQZYReplicationGraph>();
 			if (GraphClass.Get() == nullptr)
@@ -284,7 +284,7 @@ void UYQZYReplicationGraph::InitClassReplicationInfo(FClassReplicationInfo& Info
 	if (Spatialize)
 	{
 		Info.SetCullDistanceSquared(CDO->NetCullDistanceSquared);
-		UE_LOG(LogYQZYRepGraph, Log, TEXT("Setting cull distance for %s to %f (%f)"), *Class->GetName(), Info.GetCullDistanceSquared(), Info.GetCullDistance());
+		UE_LOG(YQZYLogRepGraph, Log, TEXT("Setting cull distance for %s to %f (%f)"), *Class->GetName(), Info.GetCullDistanceSquared(), Info.GetCullDistance());
 	}
 
 	Info.ReplicationPeriodFrame = GetReplicationPeriodFrameForFrequency(CDO->NetUpdateFrequency);
@@ -295,7 +295,7 @@ void UYQZYReplicationGraph::InitClassReplicationInfo(FClassReplicationInfo& Info
 		NativeClass = NativeClass->GetSuperClass();
 	}
 
-	UE_LOG(LogYQZYRepGraph, Log, TEXT("Setting replication period for %s (%s) to %d frames (%.2f)"), *Class->GetName(), *NativeClass->GetName(), Info.ReplicationPeriodFrame, CDO->NetUpdateFrequency);
+	UE_LOG(YQZYLogRepGraph, Log, TEXT("Setting replication period for %s (%s) to %d frames (%.2f)"), *Class->GetName(), *NativeClass->GetName(), Info.ReplicationPeriodFrame, CDO->NetUpdateFrequency);
 }
 
 bool UYQZYReplicationGraph::ConditionalInitClassReplicationInfo(UClass* ReplicatedClass, FClassReplicationInfo& ClassInfo)
@@ -316,7 +316,7 @@ void UYQZYReplicationGraph::AddClassRepInfo(UClass* Class, EClassRepNodeMapping 
 	{
 		if (Class->GetDefaultObject<AActor>()->bAlwaysRelevant)
 		{
-			UE_LOG(LogYQZYRepGraph, Warning, TEXT("Replicated Class %s is AlwaysRelevant but is initialized into a spatialized node (%s)"), *Class->GetName(), *StaticEnum<EClassRepNodeMapping>()->GetNameStringByValue((int64)Mapping));
+			UE_LOG(YQZYLogRepGraph, Warning, TEXT("Replicated Class %s is AlwaysRelevant but is initialized into a spatialized node (%s)"), *Class->GetName(), *StaticEnum<EClassRepNodeMapping>()->GetNameStringByValue((int64)Mapping));
 		}
 	}
 
@@ -329,7 +329,7 @@ void UYQZYReplicationGraph::RegisterClassReplicationInfo(UClass* ReplicatedClass
 	if (ConditionalInitClassReplicationInfo(ReplicatedClass, ClassInfo))
 	{
 		GlobalActorReplicationInfoMap.SetClassInfo(ReplicatedClass, ClassInfo);
-		UE_LOG(LogYQZYRepGraph, Log, TEXT("Setting %s - %.2f"), *GetNameSafe(ReplicatedClass), ClassInfo.GetCullDistance());
+		UE_LOG(YQZYLogRepGraph, Log, TEXT("Setting %s - %.2f"), *GetNameSafe(ReplicatedClass), ClassInfo.GetCullDistance());
 	}
 }
 
@@ -349,22 +349,22 @@ void UYQZYReplicationGraph::InitGlobalActorClassSettings()
 				if (bHandled)
 				{
 					EClassRepNodeMapping Mapping = ClassRepNodePolicies.GetChecked(Class);
-					UE_LOG(LogYQZYRepGraph, Warning, TEXT("%s was Lazy Initialized. (Parent: %s) %d."), *GetNameSafe(Class), *GetNameSafe(Class->GetSuperClass()), (int32)Mapping);
+					UE_LOG(YQZYLogRepGraph, Warning, TEXT("%s was Lazy Initialized. (Parent: %s) %d."), *GetNameSafe(Class), *GetNameSafe(Class->GetSuperClass()), (int32)Mapping);
 
 					FClassReplicationInfo& ParentRepInfo = GlobalActorReplicationInfoMap.GetClassInfo(Class->GetSuperClass());
 					if (ClassInfo.BuildDebugStringDelta() != ParentRepInfo.BuildDebugStringDelta())
 					{
-						UE_LOG(LogYQZYRepGraph, Warning, TEXT("Differences Found!"));
+						UE_LOG(YQZYLogRepGraph, Warning, TEXT("Differences Found!"));
 						FString DebugStr = ParentRepInfo.BuildDebugStringDelta();
-						UE_LOG(LogYQZYRepGraph, Warning, TEXT("  Parent: %s"), *DebugStr);
+						UE_LOG(YQZYLogRepGraph, Warning, TEXT("  Parent: %s"), *DebugStr);
 
 						DebugStr = ClassInfo.BuildDebugStringDelta();
-						UE_LOG(LogYQZYRepGraph, Warning, TEXT("  Class : %s"), *DebugStr);
+						UE_LOG(YQZYLogRepGraph, Warning, TEXT("  Class : %s"), *DebugStr);
 					}
 				}
 				else
 				{
-					UE_LOG(LogYQZYRepGraph, Warning, TEXT("%s skipped Lazy Initialization because it does not differ from its parent. (Parent: %s)"), *GetNameSafe(Class), *GetNameSafe(Class->GetSuperClass()));
+					UE_LOG(YQZYLogRepGraph, Warning, TEXT("%s skipped Lazy Initialization because it does not differ from its parent. (Parent: %s)"), *GetNameSafe(Class), *GetNameSafe(Class->GetSuperClass()));
 
 				}
 			}
@@ -389,7 +389,7 @@ void UYQZYReplicationGraph::InitGlobalActorClassSettings()
 		{
 			if (UClass* StaticActorClass = ActorClassSettings.GetStaticActorClass())
 			{
-				UE_LOG(LogYQZYRepGraph, Log, TEXT("ActorClassSettings -- AddClassRepInfo - %s :: %i"), *StaticActorClass->GetName(), ActorClassSettings.ClassNodeMapping);
+				UE_LOG(YQZYLogRepGraph, Log, TEXT("ActorClassSettings -- AddClassRepInfo - %s :: %i"), *StaticActorClass->GetName(), int(ActorClassSettings.ClassNodeMapping));
 				AddClassRepInfo(StaticActorClass, ActorClassSettings.ClassNodeMapping);
 			}
 		}
@@ -465,7 +465,7 @@ void UYQZYReplicationGraph::InitGlobalActorClassSettings()
 
 	CharacterClassRepInfo.FastSharedReplicationFuncName = FName(TEXT("FastSharedReplication"));
 
-	FastSharedPathConstants.MaxBitsPerFrame = (int32)((float)(YQZY::RepGraph::TargetKBytesSecFastSharedPath * 1024 * 8) / NetDriver->NetServerMaxTickRate);
+	FastSharedPathConstants.MaxBitsPerFrame = (int32)((float)(YQZY::RepGraph::TargetKBytesSecFastSharedPath * 1024 * 8) / NetDriver->GetNetServerMaxTickRate());
 	FastSharedPathConstants.DistanceRequirementPct = YQZY::RepGraph::FastSharedPathCullDistPct;
 
 	SetClassInfo(AYQZYCharacter::StaticClass(), CharacterClassRepInfo);
@@ -486,8 +486,8 @@ void UYQZYReplicationGraph::InitGlobalActorClassSettings()
 	}
 
 	// Print out what we came up with
-	UE_LOG(LogYQZYRepGraph, Log, TEXT(""));
-	UE_LOG(LogYQZYRepGraph, Log, TEXT("Class Routing Map: "));
+	UE_LOG(YQZYLogRepGraph, Log, TEXT(""));
+	UE_LOG(YQZYLogRepGraph, Log, TEXT("Class Routing Map: "));
 	for (auto ClassMapIt = ClassRepNodePolicies.CreateIterator(); ClassMapIt; ++ClassMapIt)
 	{
 		UClass* Class = CastChecked<UClass>(ClassMapIt.Key().ResolveObjectPtr());
@@ -502,17 +502,17 @@ void UYQZYReplicationGraph::InitGlobalActorClassSettings()
 			continue;
 		}
 
-		UE_LOG(LogYQZYRepGraph, Log, TEXT("  %s (%s) -> %s"), *Class->GetName(), *GetNameSafe(ParentNativeClass), *StaticEnum<EClassRepNodeMapping>()->GetNameStringByValue((int64)Mapping));
+		UE_LOG(YQZYLogRepGraph, Log, TEXT("  %s (%s) -> %s"), *Class->GetName(), *GetNameSafe(ParentNativeClass), *StaticEnum<EClassRepNodeMapping>()->GetNameStringByValue((int64)Mapping));
 	}
 
-	UE_LOG(LogYQZYRepGraph, Log, TEXT(""));
-	UE_LOG(LogYQZYRepGraph, Log, TEXT("Class Settings Map: "));
+	UE_LOG(YQZYLogRepGraph, Log, TEXT(""));
+	UE_LOG(YQZYLogRepGraph, Log, TEXT("Class Settings Map: "));
 	FClassReplicationInfo DefaultValues;
 	for (auto ClassRepInfoIt = GlobalActorReplicationInfoMap.CreateClassMapIterator(); ClassRepInfoIt; ++ClassRepInfoIt)
 	{
 		UClass* Class = CastChecked<UClass>(ClassRepInfoIt.Key().ResolveObjectPtr());
 		const FClassReplicationInfo& ClassInfo = ClassRepInfoIt.Value();
-		UE_LOG(LogYQZYRepGraph, Log, TEXT("  %s (%s) -> %s"), *Class->GetName(), *GetNameSafe(GetParentNativeClass(Class)), *ClassInfo.BuildDebugStringDelta());
+		UE_LOG(YQZYLogRepGraph, Log, TEXT("  %s (%s) -> %s"), *Class->GetName(), *GetNameSafe(GetParentNativeClass(Class)), *ClassInfo.BuildDebugStringDelta());
 	}
 
 
@@ -535,7 +535,7 @@ void UYQZYReplicationGraph::InitGlobalActorClassSettings()
 		{
 			if (UClass* StaticActorClass = ActorClassSettings.GetStaticActorClass())
 			{
-				UE_LOG(LogYQZYRepGraph, Log, TEXT("ActorClassSettings -- RPC_Multicast_OpenChannelForClass - %s"), *StaticActorClass->GetName());
+				UE_LOG(YQZYLogRepGraph, Log, TEXT("ActorClassSettings -- RPC_Multicast_OpenChannelForClass - %s"), *StaticActorClass->GetName());
 				RPC_Multicast_OpenChannelForClass.Set(StaticActorClass, ActorClassSettings.bRPC_Multicast_OpenChannelForClass);
 			}
 		}
@@ -657,7 +657,7 @@ void UYQZYReplicationGraph::RouteRemoveNetworkActorToNodes(const FNewReplicatedA
 				FActorRepListRefView& RepList = AlwaysRelevantStreamingLevelActors.FindChecked(ActorInfo.StreamingLevelName);
 				if (RepList.RemoveFast(ActorInfo.Actor) == false)
 				{
-					UE_LOG(LogYQZYRepGraph, Warning, TEXT("Actor %s was not found in AlwaysRelevantStreamingLevelActors list. LevelName: %s"), *GetActorRepListTypeDebugString(ActorInfo.Actor), *ActorInfo.StreamingLevelName.ToString());
+					UE_LOG(YQZYLogRepGraph, Warning, TEXT("Actor %s was not found in AlwaysRelevantStreamingLevelActors list. LevelName: %s"), *GetActorRepListTypeDebugString(ActorInfo.Actor), *ActorInfo.StreamingLevelName.ToString());
 				}				
 			}
 
@@ -812,7 +812,7 @@ void UYQZYReplicationGraphNode_AlwaysRelevant_ForConnection::GatherActorListsFor
 		if (Ptr == nullptr)
 		{
 			// No always relevant lists for that level
-			UE_CLOG(YQZY::RepGraph::DisplayClientLevelStreaming > 0, LogYQZYRepGraph, Display, TEXT("CLIENTSTREAMING Removing %s from AlwaysRelevantStreamingLevelActors because FActorRepListRefView is null. %s "), *StreamingLevel.ToString(),  *Params.ConnectionManager.GetName());
+			UE_CLOG(YQZY::RepGraph::DisplayClientLevelStreaming > 0, YQZYLogRepGraph, Display, TEXT("CLIENTSTREAMING Removing %s from AlwaysRelevantStreamingLevelActors because FActorRepListRefView is null. %s "), *StreamingLevel.ToString(),  *Params.ConnectionManager.GetName());
 			AlwaysRelevantStreamingLevelsNeedingReplication.RemoveAtSwap(Idx, 1, false);
 			continue;
 		}
@@ -834,18 +834,18 @@ void UYQZYReplicationGraphNode_AlwaysRelevant_ForConnection::GatherActorListsFor
 
 			if (bAllDormant)
 			{
-				UE_CLOG(YQZY::RepGraph::DisplayClientLevelStreaming > 0, LogYQZYRepGraph, Display, TEXT("CLIENTSTREAMING All AlwaysRelevant Actors Dormant on StreamingLevel %s for %s. Removing list."), *StreamingLevel.ToString(), *Params.ConnectionManager.GetName());
+				UE_CLOG(YQZY::RepGraph::DisplayClientLevelStreaming > 0, YQZYLogRepGraph, Display, TEXT("CLIENTSTREAMING All AlwaysRelevant Actors Dormant on StreamingLevel %s for %s. Removing list."), *StreamingLevel.ToString(), *Params.ConnectionManager.GetName());
 				AlwaysRelevantStreamingLevelsNeedingReplication.RemoveAtSwap(Idx, 1, false);
 			}
 			else
 			{
-				UE_CLOG(YQZY::RepGraph::DisplayClientLevelStreaming > 0, LogYQZYRepGraph, Display, TEXT("CLIENTSTREAMING Adding always Actors on StreamingLevel %s for %s because it has at least one non dormant actor"), *StreamingLevel.ToString(), *Params.ConnectionManager.GetName());
+				UE_CLOG(YQZY::RepGraph::DisplayClientLevelStreaming > 0, YQZYLogRepGraph, Display, TEXT("CLIENTSTREAMING Adding always Actors on StreamingLevel %s for %s because it has at least one non dormant actor"), *StreamingLevel.ToString(), *Params.ConnectionManager.GetName());
 				Params.OutGatheredReplicationLists.AddReplicationActorList(RepList);
 			}
 		}
 		else
 		{
-			UE_LOG(LogYQZYRepGraph, Warning, TEXT("UYQZYReplicationGraphNode_AlwaysRelevant_ForConnection::GatherActorListsForConnection - empty RepList %s"), *Params.ConnectionManager.GetName());
+			UE_LOG(YQZYLogRepGraph, Warning, TEXT("UYQZYReplicationGraphNode_AlwaysRelevant_ForConnection::GatherActorListsForConnection - empty RepList %s"), *Params.ConnectionManager.GetName());
 		}
 
 	}
@@ -860,13 +860,13 @@ void UYQZYReplicationGraphNode_AlwaysRelevant_ForConnection::GatherActorListsFor
 
 void UYQZYReplicationGraphNode_AlwaysRelevant_ForConnection::OnClientLevelVisibilityAdd(FName LevelName, UWorld* StreamingWorld)
 {
-	UE_CLOG(YQZY::RepGraph::DisplayClientLevelStreaming > 0, LogYQZYRepGraph, Display, TEXT("CLIENTSTREAMING ::OnClientLevelVisibilityAdd - %s"), *LevelName.ToString());
+	UE_CLOG(YQZY::RepGraph::DisplayClientLevelStreaming > 0, YQZYLogRepGraph, Display, TEXT("CLIENTSTREAMING ::OnClientLevelVisibilityAdd - %s"), *LevelName.ToString());
 	AlwaysRelevantStreamingLevelsNeedingReplication.Add(LevelName);
 }
 
 void UYQZYReplicationGraphNode_AlwaysRelevant_ForConnection::OnClientLevelVisibilityRemove(FName LevelName)
 {
-	UE_CLOG(YQZY::RepGraph::DisplayClientLevelStreaming > 0, LogYQZYRepGraph, Display, TEXT("CLIENTSTREAMING ::OnClientLevelVisibilityRemove - %s"), *LevelName.ToString());
+	UE_CLOG(YQZY::RepGraph::DisplayClientLevelStreaming > 0, YQZYLogRepGraph, Display, TEXT("CLIENTSTREAMING ::OnClientLevelVisibilityRemove - %s"), *LevelName.ToString());
 	AlwaysRelevantStreamingLevelsNeedingReplication.Remove(LevelName);
 }
 
@@ -993,7 +993,7 @@ FAutoConsoleCommandWithWorldAndArgs ChangeFrequencyBucketsCmd(TEXT("YQZY.RepGrap
 		LexTryParseString<int32>(Buckets, *Args[0]);
 	}
 
-	UE_LOG(LogYQZYRepGraph, Display, TEXT("Setting Frequency Buckets to %d"), Buckets);
+	UE_LOG(YQZYLogRepGraph, Display, TEXT("Setting Frequency Buckets to %d"), Buckets);
 	for (TObjectIterator<UReplicationGraphNode_ActorListFrequencyBuckets> It; It; ++It)
 	{
 		UReplicationGraphNode_ActorListFrequencyBuckets* Node = *It;

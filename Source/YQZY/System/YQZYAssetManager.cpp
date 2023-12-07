@@ -63,7 +63,7 @@ UObject* UYQZYAssetManager::SynchronousLoadAsset(const FSoftObjectPath& AssetPat
 			LogTimePtr = MakeUnique<FScopeLogTime>(*FString::Printf(TEXT("Synchronously loaded asset [%s]"), *AssetPath.ToString()), nullptr, FScopeLogTime::ScopeLog_Seconds);
 		}
 
-		if (UAssetManager::IsValid())
+		if (UAssetManager::IsInitialized())
 		{
 			return UAssetManager::GetStreamableManager().LoadSynchronous(AssetPath, false);
 		}
@@ -110,7 +110,6 @@ void UYQZYAssetManager::StartInitialLoading()
 	// This does all of the scanning, need to do this now even if loads are deferred
 	Super::StartInitialLoading();
 
-	STARTUP_JOB(InitializeAbilitySystem());
 	STARTUP_JOB(InitializeGameplayCueManager());
 
 	{
@@ -120,13 +119,6 @@ void UYQZYAssetManager::StartInitialLoading()
 
 	// Run all the queued up startup jobs
 	DoAllStartupJobs();
-}
-
-void UYQZYAssetManager::InitializeAbilitySystem()
-{
-	SCOPED_BOOT_TIMING("UYQZYAssetManager::InitializeAbilitySystem");
-
-	UAbilitySystemGlobals::Get().InitGlobalData();
 }
 
 void UYQZYAssetManager::InitializeGameplayCueManager()

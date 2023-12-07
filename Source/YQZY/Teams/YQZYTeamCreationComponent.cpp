@@ -8,6 +8,10 @@
 #include "Engine/World.h"
 #include "GameModes/YQZYGameMode.h"
 
+#if WITH_EDITOR
+#include "Misc/DataValidation.h"
+#endif
+
 #include UE_INLINE_GENERATED_CPP_BY_NAME(YQZYTeamCreationComponent)
 
 UYQZYTeamCreationComponent::UYQZYTeamCreationComponent(const FObjectInitializer& ObjectInitializer)
@@ -18,14 +22,14 @@ UYQZYTeamCreationComponent::UYQZYTeamCreationComponent(const FObjectInitializer&
 }
 
 #if WITH_EDITOR
-EDataValidationResult UYQZYTeamCreationComponent::IsDataValid(TArray<FText>& ValidationErrors)
-{
-	EDataValidationResult Result = Super::IsDataValid(ValidationErrors);
 
-	//@TODO: TEAMS: Validate that all display assets have the same properties set!
+EDataValidationResult UYQZYTeamCreationComponent::IsDataValid(FDataValidationContext& Context)const
+{
+	EDataValidationResult Result = Super::IsDataValid(Context);
 
 	return Result;
 }
+
 #endif
 
 void UYQZYTeamCreationComponent::BeginPlay()

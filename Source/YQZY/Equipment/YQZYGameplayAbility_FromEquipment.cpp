@@ -4,6 +4,10 @@
 #include "YQZYEquipmentInstance.h"
 #include "Inventory/YQZYInventoryItemInstance.h"
 
+#if WITH_EDITOR
+#include "Misc/DataValidation.h"
+#endif
+
 #include UE_INLINE_GENERATED_CPP_BY_NAME(YQZYGameplayAbility_FromEquipment)
 
 UYQZYGameplayAbility_FromEquipment::UYQZYGameplayAbility_FromEquipment(const FObjectInitializer& ObjectInitializer)
@@ -32,13 +36,13 @@ UYQZYInventoryItemInstance* UYQZYGameplayAbility_FromEquipment::GetAssociatedIte
 
 
 #if WITH_EDITOR
-EDataValidationResult UYQZYGameplayAbility_FromEquipment::IsDataValid(TArray<FText>& ValidationErrors)
+EDataValidationResult UYQZYGameplayAbility_FromEquipment::IsDataValid(FDataValidationContext& Context) const
 {
-	EDataValidationResult Result = Super::IsDataValid(ValidationErrors);
+	EDataValidationResult Result = Super::IsDataValid(Context);
 
 	if (InstancingPolicy == EGameplayAbilityInstancingPolicy::NonInstanced)
 	{
-		ValidationErrors.Add(NSLOCTEXT("YQZY", "EquipmentAbilityMustBeInstanced", "Equipment ability must be instanced"));
+		Context.AddError(NSLOCTEXT("YQZY", "EquipmentAbilityMustBeInstanced", "Equipment ability must be instanced"));
 		Result = EDataValidationResult::Invalid;
 	}
 

@@ -23,6 +23,8 @@ UYQZYHealthSet::UYQZYHealthSet()
 	, MaxHealth(100.0f)
 {
 	bOutOfHealth = false;
+	MaxHealthBeforeAttributeChange = 0.0f;
+	HealthBeforeAttributeChange = 0.0f;
 }
 
 void UYQZYHealthSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -36,11 +38,30 @@ void UYQZYHealthSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 void UYQZYHealthSet::OnRep_Health(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UYQZYHealthSet, Health, OldValue);
+	// Call the change callback, but without an instigator
+	// This could be changed to an explicit RPC in the future
+	// These events on the client should not be changing attributes
+
+	const float CurrentHealth = GetHealth();
+	const float EstimatedMagnitude = CurrentHealth - OldValue.GetCurrentValue();
+	
+	OnHealthChanged.Broadcast(nullptr, nullptr, nullptr, EstimatedMagnitude, OldValue.GetCurrentValue(), CurrentHealth);
+
+	if (!bOutOfHealth && CurrentHealth <= 0.0f)
+	{
+		OnOutOfHealth.Broadcast(nullptr, nullptr, nullptr, EstimatedMagnitude, OldValue.GetCurrentValue(), CurrentHealth);
+	}
+
+	bOutOfHealth = (CurrentHealth <= 0.0f);
 }
 
 void UYQZYHealthSet::OnRep_MaxHealth(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UYQZYHealthSet, MaxHealth, OldValue);
+
+	// Call the change callback, but without an instigator
+	// This could be changed to an explicit RPC in the future
+	OnMaxHealthChanged.Broadcast(nullptr, nullptr, nullptr, GetMaxHealth() - OldValue.GetCurrentValue(), OldValue.GetCurrentValue(), GetMaxHealth());
 }
 
 bool UYQZYHealthSet::PreGameplayEffectExecute(FGameplayEffectModCallbackData &Data)
@@ -76,6 +97,10 @@ bool UYQZYHealthSet::PreGameplayEffectExecute(FGameplayEffectModCallbackData &Da
 		}
 	}
 
+	// Save the current health
+	HealthBeforeAttributeChange = GetHealth();
+	MaxHealthBeforeAttributeChange = GetMaxHealth();
+
 	return true;
 }
 
@@ -94,6 +119,10 @@ void UYQZYHealthSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackD
 		MinimumHealth = 1.0f;
 	}
 #endif // #if !UE_BUILD_SHIPPING
+
+	const FGameplayEffectContextHandle& EffectContext = Data.EffectSpec.GetEffectContext();
+	AActor* Instigator = EffectContext.GetOriginalInstigator();
+	AActor* Causer = EffectContext.GetEffectCauser();
 
 	if (Data.EvaluatedData.Attribute == GetDamageAttribute())
 	{
@@ -129,17 +158,23 @@ void UYQZYHealthSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackD
 		// Clamp and fall into out of health handling below
 		SetHealth(FMath::Clamp(GetHealth(), MinimumHealth, GetMaxHealth()));
 	}
+	else if (Data.EvaluatedData.Attribute == GetMaxHealthAttribute())
+	{
+		// TODO clamp current health?
+
+		// Notify on any requested max health changes
+		OnMaxHealthChanged.Broadcast(Instigator, Causer, &Data.EffectSpec, Data.EvaluatedData.Magnitude, MaxHealthBeforeAttributeChange, GetMaxHealth());
+	}
+
+	// If health has actually changed activate callbacks
+	if (GetHealth() != HealthBeforeAttributeChange)
+	{
+		OnHealthChanged.Broadcast(Instigator, Causer, &Data.EffectSpec, Data.EvaluatedData.Magnitude, HealthBeforeAttributeChange, GetHealth());
+	}
 
 	if ((GetHealth() <= 0.0f) && !bOutOfHealth)
 	{
-		if (OnOutOfHealth.IsBound())
-		{
-			const FGameplayEffectContextHandle& EffectContext = Data.EffectSpec.GetEffectContext();
-			AActor* Instigator = EffectContext.GetOriginalInstigator();
-			AActor* Causer = EffectContext.GetEffectCauser();
-
-			OnOutOfHealth.Broadcast(Instigator, Causer, Data.EffectSpec, Data.EvaluatedData.Magnitude);
-		}
+		OnOutOfHealth.Broadcast(Instigator, Causer, &Data.EffectSpec, Data.EvaluatedData.Magnitude, HealthBeforeAttributeChange, GetHealth());
 	}
 
 	// Check health again in case an event above changed it.

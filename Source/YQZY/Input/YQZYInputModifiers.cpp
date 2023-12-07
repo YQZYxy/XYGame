@@ -10,7 +10,7 @@
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(YQZYInputModifiers)
 
-DEFINE_LOG_CATEGORY_STATIC(LogYQZYInputModifiers, Log, All);
+DEFINE_LOG_CATEGORY_STATIC(YQZYLogInputModifiers, Log, All);
 
 //////////////////////////////////////////////////////////////////////
 // YQZYInputModifiersHelpers

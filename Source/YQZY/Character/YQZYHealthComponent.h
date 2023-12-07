@@ -13,12 +13,9 @@ class UYQZYHealthSet;
 class UObject;
 struct FFrame;
 struct FGameplayEffectSpec;
-struct FOnAttributeChangeData;
-
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FYQZYHealth_DeathEvent, AActor*, OwningActor);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FYQZYHealth_AttributeChanged, UYQZYHealthComponent*, HealthComponent, float, OldValue, float, NewValue, AActor*, Instigator);
-
 
 /**
  * EYQZYDeathState
@@ -89,11 +86,11 @@ public:
 
 public:
 
-	// Delegate fired when the health value has changed.
+	// Delegate fired when the health value has changed. This is called on the client but the instigator may not be valid
 	UPROPERTY(BlueprintAssignable)
 	FYQZYHealth_AttributeChanged OnHealthChanged;
 
-	// Delegate fired when the max health value has changed.
+	// Delegate fired when the max health value has changed. This is called on the client but the instigator may not be valid
 	UPROPERTY(BlueprintAssignable)
 	FYQZYHealth_AttributeChanged OnMaxHealthChanged;
 
@@ -111,9 +108,9 @@ protected:
 
 	void ClearGameplayTags();
 
-	virtual void HandleHealthChanged(const FOnAttributeChangeData& ChangeData);
-	virtual void HandleMaxHealthChanged(const FOnAttributeChangeData& ChangeData);
-	virtual void HandleOutOfHealth(AActor* DamageInstigator, AActor* DamageCauser, const FGameplayEffectSpec& DamageEffectSpec, float DamageMagnitude);
+	virtual void HandleHealthChanged(AActor* DamageInstigator, AActor* DamageCauser, const FGameplayEffectSpec* DamageEffectSpec, float DamageMagnitude, float OldValue, float NewValue);
+	virtual void HandleMaxHealthChanged(AActor* DamageInstigator, AActor* DamageCauser, const FGameplayEffectSpec* DamageEffectSpec, float DamageMagnitude, float OldValue, float NewValue);
+	virtual void HandleOutOfHealth(AActor* DamageInstigator, AActor* DamageCauser, const FGameplayEffectSpec* DamageEffectSpec, float DamageMagnitude, float OldValue, float NewValue);
 
 	UFUNCTION()
 	virtual void OnRep_DeathState(EYQZYDeathState OldDeathState);

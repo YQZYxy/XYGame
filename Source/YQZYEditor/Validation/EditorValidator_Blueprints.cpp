@@ -87,7 +87,7 @@ EDataValidationResult UEditorValidator_Blueprints::ValidateLoadedAsset_Implement
 							{
 								if (!bIsDataOnlyBP)
 								{
-									UE_LOG(LogYQZYEditor, Display, TEXT("    Loading referencing non-dataonly blueprint %s"), *HardReferencerStr);
+									UE_LOG(YQZYLogEditor, Display, TEXT("    Loading referencing non-dataonly blueprint %s"), *HardReferencerStr);
 
 									TArray<FString> WarningsAndErrors;
 									if (UEditorValidator_Load::GetLoadWarningsAndErrorsForPackage(HardReferencerStr, WarningsAndErrors))

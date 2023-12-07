@@ -4,4 +4,4 @@
 
 #include "Logging/LogMacros.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(LogYQZYGamePhase, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(YQZYLogGamePhase, Log, All);

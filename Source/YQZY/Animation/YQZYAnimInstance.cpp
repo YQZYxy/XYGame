@@ -5,6 +5,10 @@
 #include "Character/YQZYCharacter.h"
 #include "Character/YQZYCharacterMovementComponent.h"
 
+#if WITH_EDITOR
+#include "Misc/DataValidation.h"
+#endif
+
 #include UE_INLINE_GENERATED_CPP_BY_NAME(YQZYAnimInstance)
 
 
@@ -21,13 +25,13 @@ void UYQZYAnimInstance::InitializeWithAbilitySystem(UAbilitySystemComponent* ASC
 }
 
 #if WITH_EDITOR
-EDataValidationResult UYQZYAnimInstance::IsDataValid(TArray<FText>& ValidationErrors)
+EDataValidationResult UYQZYAnimInstance::IsDataValid(FDataValidationContext& Context) const
 {
-	Super::IsDataValid(ValidationErrors);
+	Super::IsDataValid(Context);
 
-	GameplayTagPropertyMap.IsDataValid(this, ValidationErrors);
+	GameplayTagPropertyMap.IsDataValid(this, Context);
 
-	return ((ValidationErrors.Num() > 0) ? EDataValidationResult::Invalid : EDataValidationResult::Valid);
+	return ((Context.GetNumErrors() > 0) ? EDataValidationResult::Invalid : EDataValidationResult::Valid);
 }
 #endif // WITH_EDITOR
 

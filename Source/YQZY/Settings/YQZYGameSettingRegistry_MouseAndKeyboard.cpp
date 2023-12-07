@@ -1,6 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "CommonInputBaseTypes.h"
+#include "EnhancedInputSubsystems.h"
 #include "CustomSettings/YQZYSettingKeyboardInput.h"
 #include "DataSource/GameSettingDataSource.h"
 #include "EditCondition/WhenCondition.h"
@@ -136,80 +137,78 @@ UGameSettingCollection* UYQZYGameSettingRegistry::InitializeMouseAndKeyboardSett
 		KeyBinding->SetDevName(TEXT("KeyBindingCollection"));
 		KeyBinding->SetDisplayName(LOCTEXT("KeyBindingCollection_Name", "Keyboard & Mouse"));
 		Screen->AddSetting(KeyBinding);
-		static TSet<FName> AddedSettings;
-		AddedSettings.Reset();
 
-		//----------------------------------------------------------------------------------
+
+		const UEnhancedInputLocalPlayerSubsystem* EISubsystem = InLocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
+		const UEnhancedInputUserSettings* UserSettings = EISubsystem->GetUserSettings();
+
+		// If you want to just get one profile pair, then you can do UserSettings->GetCurrentProfile
+
+		// A map of key bindings mapped to their display category
+		TMap<FString, UGameSettingCollection*> CategoryToSettingCollection;
+
+		// Returns an existing setting collection for the display category if there is one.
+		// If there isn't one, then it will create a new one and initialize it
+		auto GetOrCreateSettingCollection = [&CategoryToSettingCollection, &Screen](FText DisplayCategory) -> UGameSettingCollection*
 		{
-			const TArray<FLoadedMappableConfigPair>& RegisteredConfigs = InLocalPlayer->GetLocalSettings()->GetAllRegisteredInputConfigs();	
-			const TMap<FName, FKey>& CustomKeyMap = InLocalPlayer->GetLocalSettings()->GetCustomPlayerInputConfig();
-			
-			for (const FLoadedMappableConfigPair& InputConfigPair : RegisteredConfigs)
+			static const FString DefaultDevName = TEXT("Default_KBM");
+			static const FText DefaultDevDisplayName = NSLOCTEXT("YQZYInputSettings", "YQZYInputDefaults", "Default Experiences");
+
+			if (DisplayCategory.IsEmpty())
 			{
-				if (InputConfigPair.Type != ECommonInputType::MouseAndKeyboard)
-				{
-					continue;
-				}
-				
-				TArray<FEnhancedActionKeyMapping> ConfigMappings = InputConfigPair.Config->GetPlayerMappableKeys();
-				if (ConfigMappings.IsEmpty())
-				{
-					UE_LOG(LogYQZYGameSettingRegistry, Warning, TEXT("PlayerMappableInputConfig '%s' has no player mappable keys in it! Skipping it in the setting registry..."), *InputConfigPair.Config->GetConfigName().ToString());
-					continue;
-				}
-				
-				UGameSettingCollection* ConfigSettingCollection = NewObject<UGameSettingCollection>();
-				ConfigSettingCollection->SetDevName(InputConfigPair.Config->GetConfigName());
-				ConfigSettingCollection->SetDisplayName(InputConfigPair.Config->GetDisplayName());
-				Screen->AddSetting(ConfigSettingCollection);
-				
-				// Add each player mappable key to the settings screen!
-				for (FEnhancedActionKeyMapping& Mapping : ConfigMappings)
-				{
-					UYQZYSettingKeyboardInput* ExistingSetting = nullptr;
+				DisplayCategory = DefaultDevDisplayName;
+			}
+			
+			FString DisplayCatString = DisplayCategory.ToString();
+			
+			if (UGameSettingCollection** ExistingCategory = CategoryToSettingCollection.Find(DisplayCatString))
+			{
+				return *ExistingCategory;
+			}
+			
+			UGameSettingCollection* ConfigSettingCollection = NewObject<UGameSettingCollection>();
+			ConfigSettingCollection->SetDevName(FName(DisplayCatString));
+			ConfigSettingCollection->SetDisplayName(DisplayCategory);
+			Screen->AddSetting(ConfigSettingCollection);
+			CategoryToSettingCollection.Add(DisplayCatString, ConfigSettingCollection);
+			
+			return ConfigSettingCollection;
+		};
 
-					// Make sure that we cannot add two settings with the same FName for saving purposes
-					if (AddedSettings.Contains(Mapping.PlayerMappableOptions.Name))
-					{
-						UE_LOG(LogYQZYGameSettingRegistry, Warning, TEXT("A setting with the name '%s' from config '%s' has already been added! Please remove duplicate name."), *Mapping.PlayerMappableOptions.Name.ToString(), *InputConfigPair.Config->GetConfigName().ToString());
-						continue;
-					}
-					
-					for (UGameSetting* Setting : ConfigSettingCollection->GetChildSettings())
-					{
-						UYQZYSettingKeyboardInput* YQZYKeyboardSetting = Cast<UYQZYSettingKeyboardInput>(Setting);
-						if (YQZYKeyboardSetting->GetSettingDisplayName().EqualToCaseIgnored(Mapping.PlayerMappableOptions.DisplayName))
-						{
-							ExistingSetting = YQZYKeyboardSetting;
-							break;
-						}
-					}
-					
-					FEnhancedActionKeyMapping MappingSynthesized(Mapping);
-					// If the player has bound a custom key to this action, then set it to that
-					if (const FKey* PlayerBoundKey = CustomKeyMap.Find(Mapping.PlayerMappableOptions.Name))
-					{
-						MappingSynthesized.Key = *PlayerBoundKey;
-					}
+		static TSet<FName> CreatedMappingNames;
+		CreatedMappingNames.Reset();
+		
+		for (const TPair<FGameplayTag, TObjectPtr<UEnhancedPlayerMappableKeyProfile>>& ProfilePair : UserSettings->GetAllSavedKeyProfiles())
+		{
+			const FGameplayTag& ProfileName = ProfilePair.Key;
+			const TObjectPtr<UEnhancedPlayerMappableKeyProfile>& Profile = ProfilePair.Value;
 
-					if (MappingSynthesized.PlayerMappableOptions.Name != NAME_None && !MappingSynthesized.PlayerMappableOptions.DisplayName.IsEmpty())
+			for (const TPair<FName, FKeyMappingRow>& RowPair : Profile->GetPlayerMappingRows())
+			{
+				// Create a setting row for anything with valid mappings and that we haven't created yet
+				if (RowPair.Value.HasAnyMappings() /* && !CreatedMappingNames.Contains(RowPair.Key)*/)
+				{
+					// We only want keyboard keys on this settings screen, so we will filter down by mappings
+					// that are set to keyboard keys
+					FPlayerMappableKeyQueryOptions Options = {};
+					Options.KeyToMatch = EKeys::W;
+					Options.bMatchBasicKeyTypes = true;
+															
+					const FText& DesiredDisplayCategory = RowPair.Value.Mappings.begin()->GetDisplayCategory();
+					
+					if (UGameSettingCollection* Collection = GetOrCreateSettingCollection(DesiredDisplayCategory))
 					{
 						// Create the settings widget and initialize it, adding it to this config's section
-						UYQZYSettingKeyboardInput* InputBinding = ExistingSetting ? ExistingSetting : NewObject<UYQZYSettingKeyboardInput>();
-						
-						InputBinding->SetInputData(MappingSynthesized, InputConfigPair.Config, !ExistingSetting ? 0 : 1);
+						UYQZYSettingKeyboardInput* InputBinding = NewObject<UYQZYSettingKeyboardInput>();
+
+						InputBinding->InitializeInputData(Profile, RowPair.Value, Options);
 						InputBinding->AddEditCondition(WhenPlatformSupportsMouseAndKeyboard);
-						
-						if (!ExistingSetting)
-						{
-							ConfigSettingCollection->AddSetting(InputBinding);	
-						}
-						
-						AddedSettings.Add(MappingSynthesized.PlayerMappableOptions.Name);
+
+						Collection->AddSetting(InputBinding);
+						CreatedMappingNames.Add(RowPair.Key);
 					}
 					else
 					{
-						UE_LOG(LogYQZYGameSettingRegistry, Warning, TEXT("A setting with the name '%s' from config '%s' could not be added, one of its names is empty!"), *Mapping.PlayerMappableOptions.Name.ToString(), *InputConfigPair.Config->GetConfigName().ToString());
 						ensure(false);
 					}
 				}

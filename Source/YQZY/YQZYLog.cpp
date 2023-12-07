@@ -1,7 +1,7 @@
 #include "YQZYLog.h"
 #include "GameFramework/Actor.h"
 
-DEFINE_LOG_CATEGORY(AYQZYLog);
+DEFINE_LOG_CATEGORY(YQZYLog);
 
 FString GetClientServerContextString(UObject* ContextObject)
 {

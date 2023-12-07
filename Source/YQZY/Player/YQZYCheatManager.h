@@ -12,7 +12,7 @@ class UYQZYAbilitySystemComponent;
 #define USING_CHEAT_MANAGER (1 && !UE_BUILD_SHIPPING)
 #endif // #ifndef USING_CHEAT_MANAGER
 
-DECLARE_LOG_CATEGORY_EXTERN(LogYQZYCheat, Log, All);
+DECLARE_LOG_CATEGORY_EXTERN(YQZYLogCheat, Log, All);
 
 
 /**

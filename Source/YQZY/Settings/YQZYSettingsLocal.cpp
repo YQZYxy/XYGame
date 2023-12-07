@@ -25,6 +25,7 @@
 #include "AudioModulationStatics.h"
 #include "Audio/YQZYAudioSettings.h"
 #include "Audio/YQZYAudioMixEffectsSubsystem.h"
+#include "EnhancedActionKeyMapping.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(YQZYSettingsLocal)
 
@@ -334,6 +335,7 @@ namespace YQZYSettingsHelpers
 
 //////////////////////////////////////////////////////////////////////
 
+PRAGMA_DISABLE_DEPRECATION_WARNINGS
 UYQZYSettingsLocal::UYQZYSettingsLocal()
 {
 	if (!HasAnyFlags(RF_ClassDefaultObject) && FSlateApplication::IsInitialized())
@@ -343,6 +345,7 @@ UYQZYSettingsLocal::UYQZYSettingsLocal()
 
 	SetToDefaults();
 }
+PRAGMA_ENABLE_DEPRECATION_WARNINGS
 
 void UYQZYSettingsLocal::SetToDefaults()
 {
@@ -784,7 +787,7 @@ void UYQZYSettingsLocal::ClampMobileQuality()
 
 		// Choose the closest supported frame rate to the user desired setting without going over the device imposed limit
 		const TArray<int32>& PossibleRates = PlatformSettings->MobileFrameRateLimits;
-		const int32 LimitIndex = PossibleRates.FindLastByPredicate([=](const int32& TestRate) { return (TestRate <= DesiredMobileFrameRateLimit) && IsSupportedMobileFramePace(TestRate); });
+		const int32 LimitIndex = PossibleRates.FindLastByPredicate([this](const int32& TestRate) { return (TestRate <= DesiredMobileFrameRateLimit) && IsSupportedMobileFramePace(TestRate); });
 		const int32 ActualLimitFPS = PossibleRates.IsValidIndex(LimitIndex) ? PossibleRates[LimitIndex] : GetDefaultMobileFrameRate();
 
 		ClampMobileResolutionQuality(ActualLimitFPS);
@@ -1266,6 +1269,8 @@ FName UYQZYSettingsLocal::GetControllerPlatform() const
 	return ControllerPlatform;
 }
 
+PRAGMA_DISABLE_DEPRECATION_WARNINGS
+
 void UYQZYSettingsLocal::RegisterInputConfig(ECommonInputType Type, const UPlayerMappableInputConfig* NewConfig, const bool bIsActive)
 {
 	if (NewConfig)
@@ -1343,8 +1348,8 @@ void UYQZYSettingsLocal::GetAllMappingNamesFromKey(const FKey InKey, TArray<FNam
 		{
 			for (const FEnhancedActionKeyMapping& Mapping : Pair.Config->GetPlayerMappableKeys())
 			{
-				FName MappingName(Mapping.PlayerMappableOptions.DisplayName.ToString());
-				FName ActionName = Mapping.PlayerMappableOptions.Name;
+				FName MappingName(Mapping.GetDisplayName().ToString());
+				FName ActionName = Mapping.GetMappingName();
 				// make sure it isn't custom bound as well
 				if (const FKey* MappingKey = CustomKeyboardConfig.Find(ActionName))
 				{
@@ -1381,9 +1386,9 @@ void UYQZYSettingsLocal::AddOrUpdateCustomKeyboardBindings(const FName MappingNa
 			{
 				// Make sure that the mapping has a valid name, its possible to have an empty name
 				// if someone has marked a mapping as "Player Mappable" but deleted the default field value
-				if (Mapping.PlayerMappableOptions.Name != NAME_None)
+				if (Mapping.GetMappingName() != NAME_None)
 				{
-					CustomKeyboardConfig.Add(Mapping.PlayerMappableOptions.Name, Mapping.Key);
+					CustomKeyboardConfig.Add(Mapping.GetMappingName(), Mapping.Key);
 				}
 			}
 		}
@@ -1423,6 +1428,8 @@ void UYQZYSettingsLocal::ResetKeybindingsToDefault(UYQZYLocalPlayer* LocalPlayer
 		Subsystem->RemoveAllPlayerMappedKeys();
 	}
 }
+
+PRAGMA_ENABLE_DEPRECATION_WARNINGS
 
 void UYQZYSettingsLocal::LoadUserControlBusMix()
 {
@@ -1740,7 +1747,7 @@ void UYQZYSettingsLocal::UpdateMobileFramePacing()
 	// Choose the closest supported frame rate to the user desired setting without going over the device imposed limit
 	const UYQZYPlatformSpecificRenderingSettings* PlatformSettings = UYQZYPlatformSpecificRenderingSettings::Get();
 	const TArray<int32>& PossibleRates = PlatformSettings->MobileFrameRateLimits;
-	const int32 LimitIndex = PossibleRates.FindLastByPredicate([=](const int32& TestRate) { return (TestRate <= MobileFrameRateLimit) && IsSupportedMobileFramePace(TestRate); });
+	const int32 LimitIndex = PossibleRates.FindLastByPredicate([this](const int32& TestRate) { return (TestRate <= MobileFrameRateLimit) && IsSupportedMobileFramePace(TestRate); });
 	const int32 TargetFPS = PossibleRates.IsValidIndex(LimitIndex) ? PossibleRates[LimitIndex] : GetDefaultMobileFrameRate();
 
 	UE_LOG(LogConsoleResponse, Log, TEXT("Setting frame pace to %d Hz."), TargetFPS);

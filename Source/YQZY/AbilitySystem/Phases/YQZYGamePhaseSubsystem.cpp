@@ -13,7 +13,7 @@
 class UYQZYGameplayAbility;
 class UObject;
 
-DEFINE_LOG_CATEGORY(LogYQZYGamePhase);
+DEFINE_LOG_CATEGORY(YQZYLogGamePhase);
 
 //////////////////////////////////////////////////////////////////////
 // UYQZYGamePhaseSubsystem
@@ -137,7 +137,7 @@ void UYQZYGamePhaseSubsystem::OnBeginPhase(const UYQZYGamePhaseAbility* PhaseAbi
 {
 	const FGameplayTag IncomingPhaseTag = PhaseAbility->GetGamePhaseTag();
 
-	UE_LOG(LogYQZYGamePhase, Log, TEXT("Beginning Phase '%s' (%s)"), *IncomingPhaseTag.ToString(), *GetNameSafe(PhaseAbility));
+	UE_LOG(YQZYLogGamePhase, Log, TEXT("Beginning Phase '%s' (%s)"), *IncomingPhaseTag.ToString(), *GetNameSafe(PhaseAbility));
 
 	const UWorld* World = GetWorld();
 	UYQZYAbilitySystemComponent* GameState_ASC = World->GetGameState()->FindComponentByClass<UYQZYAbilitySystemComponent>();
@@ -167,7 +167,7 @@ void UYQZYGamePhaseSubsystem::OnBeginPhase(const UYQZYGamePhaseAbility* PhaseAbi
 			// continue.  Similarly if we activated Game.GameOver, all the Game.Playing* phases would end.
 			if (!IncomingPhaseTag.MatchesTag(ActivePhaseTag))
 			{
-				UE_LOG(LogYQZYGamePhase, Log, TEXT("\tEnding Phase '%s' (%s)"), *ActivePhaseTag.ToString(), *GetNameSafe(ActivePhaseAbility));
+				UE_LOG(YQZYLogGamePhase, Log, TEXT("\tEnding Phase '%s' (%s)"), *ActivePhaseTag.ToString(), *GetNameSafe(ActivePhaseAbility));
 
 				FGameplayAbilitySpecHandle HandleToEnd = ActivePhase->Handle;
 				GameState_ASC->CancelAbilitiesByFunc([HandleToEnd](const UYQZYGameplayAbility* YQZYAbility, FGameplayAbilitySpecHandle Handle) {
@@ -193,7 +193,7 @@ void UYQZYGamePhaseSubsystem::OnBeginPhase(const UYQZYGamePhaseAbility* PhaseAbi
 void UYQZYGamePhaseSubsystem::OnEndPhase(const UYQZYGamePhaseAbility* PhaseAbility, const FGameplayAbilitySpecHandle PhaseAbilityHandle)
 {
 	const FGameplayTag EndedPhaseTag = PhaseAbility->GetGamePhaseTag();
-	UE_LOG(LogYQZYGamePhase, Log, TEXT("Ended Phase '%s' (%s)"), *EndedPhaseTag.ToString(), *GetNameSafe(PhaseAbility));
+	UE_LOG(YQZYLogGamePhase, Log, TEXT("Ended Phase '%s' (%s)"), *EndedPhaseTag.ToString(), *GetNameSafe(PhaseAbility));
 
 	const FYQZYGamePhaseEntry& Entry = ActivePhaseMap.FindChecked(PhaseAbilityHandle);
 	Entry.PhaseEndedCallback.ExecuteIfBound(PhaseAbility);

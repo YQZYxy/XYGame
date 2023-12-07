@@ -20,6 +20,8 @@
 #include "Components/GameFrameworkComponentManager.h"
 #include "PlayerMappableInputConfig.h"
 #include "Camera/YQZYCameraMode.h"
+#include "UserSettings/EnhancedInputUserSettings.h"
+#include "InputMappingContext.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(YQZYHeroComponent)
 
@@ -152,7 +154,6 @@ void UYQZYHeroComponent::HandleChangeInitState(UGameFrameworkComponentManager* M
 			return;
 		}
 
-		const bool bIsLocallyControlled = Pawn->IsLocallyControlled();
 		const UYQZYPawnData* PawnData = nullptr;
 
 		if (UYQZYPawnExtensionComponent* PawnExtComp = UYQZYPawnExtensionComponent::FindPawnExtensionComponent(Pawn))
@@ -172,7 +173,8 @@ void UYQZYHeroComponent::HandleChangeInitState(UGameFrameworkComponentManager* M
 			}
 		}
 
-		if (bIsLocallyControlled && PawnData)
+		// Hook up the delegate for all pawns, in case we spectate later
+		if (PawnData)
 		{
 			if (UYQZYCameraComponent* CameraComponent = UYQZYCameraComponent::FindCameraComponent(Pawn))
 			{
@@ -248,15 +250,22 @@ void UYQZYHeroComponent::InitializePlayerInput(UInputComponent* PlayerInputCompo
 		{
 			if (const UYQZYInputConfig* InputConfig = PawnData->InputConfig)
 			{
-				// Register any default input configs with the settings so that they will be applied to the player during AddInputMappings
-				for (const FMappableConfigPair& Pair : DefaultInputConfigs)
+				for (const FInputMappingContextAndPriority& Mapping : DefaultInputMappings)
 				{
-					if (Pair.bShouldActivateAutomatically && Pair.CanBeActivated())
+					if (UInputMappingContext* IMC = Mapping.InputMapping.Get())
 					{
-						FModifyContextOptions Options = {};
-						Options.bIgnoreAllPressedKeysUntilRelease = false;
-						// Actually add the config to the local player							
-						Subsystem->AddPlayerMappableConfig(Pair.Config.LoadSynchronous(), Options);	
+						if (Mapping.bRegisterWithSettings)
+						{
+							if (UEnhancedInputUserSettings* Settings = Subsystem->GetUserSettings())
+							{
+								Settings->RegisterInputMappingContext(IMC);
+							}
+							
+							FModifyContextOptions Options = {};
+							Options.bIgnoreAllPressedKeysUntilRelease = false;
+							// Actually add the config to the local player							
+							Subsystem->AddMappingContext(IMC, Mapping.Priority, Options);
+						}
 					}
 				}
 

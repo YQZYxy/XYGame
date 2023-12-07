@@ -15,7 +15,7 @@
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(ContentValidationCommandlet)
 
-DEFINE_LOG_CATEGORY_STATIC(LogYQZYContentValidation, Log, Log);
+DEFINE_LOG_CATEGORY_STATIC(YQZYLogContentValidation, Log, Log);
 
 class FScopedContentValidationMessageGatherer : public FOutputDevice
 {
@@ -50,7 +50,7 @@ UContentValidationCommandlet::UContentValidationCommandlet(const FObjectInitiali
 
 int32 UContentValidationCommandlet::Main(const FString& FullCommandLine)
 {
-	UE_LOG(LogYQZYContentValidation, Display, TEXT("Running ContentValidationCommandlet commandlet..."));
+	UE_LOG(YQZYLogContentValidation, Display, TEXT("Running ContentValidationCommandlet commandlet..."));
 	
 	TArray<FString> Tokens;
 	TArray<FString> Switches;
@@ -73,7 +73,7 @@ int32 UContentValidationCommandlet::Main(const FString& FullCommandLine)
 		FString P4CmdString = TEXT("files ") + *P4FilterString;
 		if (!GetAllChangedFiles(AssetRegistry, P4CmdString, ChangedPackageNames, DeletedPackageNames, ChangedCode, ChangedOtherFiles))
 		{
-			UE_LOG(LogYQZYContentValidation, Display, TEXT("ContentValidation returning 1. Failed to get changed files."));
+			UE_LOG(YQZYLogContentValidation, Display, TEXT("ContentValidation returning 1. Failed to get changed files."));
 			ReturnVal = 1;
 		}
 	}
@@ -84,7 +84,7 @@ int32 UContentValidationCommandlet::Main(const FString& FullCommandLine)
 		FString P4CmdString = TEXT("opened -c ") + *P4ChangelistString;
 		if (!GetAllChangedFiles(AssetRegistry, P4CmdString, ChangedPackageNames, DeletedPackageNames, ChangedCode, ChangedOtherFiles))
 		{
-			UE_LOG(LogYQZYContentValidation, Display, TEXT("ContentValidation returning 1. Failed to get changed files."));
+			UE_LOG(YQZYLogContentValidation, Display, TEXT("ContentValidation returning 1. Failed to get changed files."));
 			ReturnVal = 1;
 		}
 	}
@@ -112,14 +112,14 @@ int32 UContentValidationCommandlet::Main(const FString& FullCommandLine)
 			FString P4CmdString = FString::Printf(TEXT("-c%s opened"), *Workspace);
 			if (!GetAllChangedFiles(AssetRegistry, P4CmdString, ChangedPackageNames, DeletedPackageNames, ChangedCode, ChangedOtherFiles))
 			{
-				UE_LOG(LogYQZYContentValidation, Display, TEXT("ContentValidation returning 1. Failed to get changed files."));
+				UE_LOG(YQZYLogContentValidation, Display, TEXT("ContentValidation returning 1. Failed to get changed files."));
 				ReturnVal = 1;
 			}
 		}
 		else
 		{
-			UE_LOG(LogYQZYContentValidation, Error, TEXT("P4 workspace was not found when using P4Opened"));
-			UE_LOG(LogYQZYContentValidation, Display, TEXT("ContentValidation returning 1. Workspace not found."));
+			UE_LOG(YQZYLogContentValidation, Error, TEXT("P4 workspace was not found when using P4Opened"));
+			UE_LOG(YQZYLogContentValidation, Display, TEXT("ContentValidation returning 1. Workspace not found."));
 			ReturnVal = 1;
 		}
 	}
@@ -286,7 +286,7 @@ bool UContentValidationCommandlet::GetAllChangedFiles(IAssetRegistry& AssetRegis
 		}
 		else
 		{
-			UE_LOG(LogYQZYContentValidation, Error, TEXT("p4 returned non-zero return code %d"), ReturnCode);
+			UE_LOG(YQZYLogContentValidation, Error, TEXT("p4 returned non-zero return code %d"), ReturnCode);
 		}
 	}
 
@@ -334,7 +334,7 @@ void UContentValidationCommandlet::GetAllPackagesOfType(const FString& OfTypeStr
 		FTopLevelAssetPath TypePathName = UClass::TryConvertShortTypeNameToPathName<UStruct>(Type, ELogVerbosity::Error, TEXT("UContentValidationCommandlet"));
 		if (TypePathName.IsNull())
 		{
-			UE_LOG(LogYQZYContentValidation, Error, TEXT("Failed to convert short class name \"%s\" to path name. Please use class path names."), *Type);
+			UE_LOG(YQZYLogContentValidation, Error, TEXT("Failed to convert short class name \"%s\" to path name. Please use class path names."), *Type);
 		}
 		else
 		{
@@ -377,7 +377,7 @@ bool UContentValidationCommandlet::LaunchP4(const FString& Args, TArray<FString>
 	}
 	else
 	{
-		UE_LOG(LogYQZYContentValidation, Error, TEXT("Failed to launch p4."));
+		UE_LOG(YQZYLogContentValidation, Error, TEXT("Failed to launch p4."));
 	}
 
 	FPlatformProcess::ClosePipe(PipeRead, PipeWrite);
@@ -419,7 +419,7 @@ FString UContentValidationCommandlet::GetLocalPathFromDepotPath(const FString& D
 			}
 			else
 			{
-				UE_LOG(LogYQZYContentValidation, Warning, TEXT("GetAllChangedFiles failed to run p4 'where'. WhereResults[0] = '%s'. Not adding any validation for %s"), WhereResults.Num() > 0 ? *WhereResults[0] : TEXT("Invalid"), *DepotPathName);
+				UE_LOG(YQZYLogContentValidation, Warning, TEXT("GetAllChangedFiles failed to run p4 'where'. WhereResults[0] = '%s'. Not adding any validation for %s"), WhereResults.Num() > 0 ? *WhereResults[0] : TEXT("Invalid"), *DepotPathName);
 			}
 		}
 	}

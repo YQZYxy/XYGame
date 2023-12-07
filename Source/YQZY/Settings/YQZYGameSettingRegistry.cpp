@@ -9,7 +9,7 @@
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(YQZYGameSettingRegistry)
 
-DEFINE_LOG_CATEGORY(LogYQZYGameSettingRegistry);
+DEFINE_LOG_CATEGORY(YQZYLogGameSettingRegistry);
 
 #define LOCTEXT_NAMESPACE "YQZY"
 

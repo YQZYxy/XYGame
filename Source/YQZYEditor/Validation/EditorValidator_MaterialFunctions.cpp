@@ -78,7 +78,7 @@ EDataValidationResult UEditorValidator_MaterialFunctions::ValidateLoadedAsset_Im
 				{
 					if (ReferencerAssetData.AssetClassPath == UMaterial::StaticClass()->GetClassPathName())
 					{
-						UE_LOG(LogYQZYEditor, Display, TEXT("    Loading referencing material %s"), *HardReferencerStr);
+						UE_LOG(YQZYLogEditor, Display, TEXT("    Loading referencing material %s"), *HardReferencerStr);
 
 						TArray<FString> WarningsAndErrors;
 						if (UEditorValidator_Load::GetLoadWarningsAndErrorsForPackage(HardReferencerStr, WarningsAndErrors))

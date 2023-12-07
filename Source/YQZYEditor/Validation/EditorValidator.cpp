@@ -52,7 +52,7 @@ void UEditorValidator::ValidateCheckedOutContent(bool bInteractive, const EDataV
 		}
 		else
 		{
-			UE_LOG(LogYQZYEditor, Display, TEXT("Could not run ValidateCheckedOutContent because asset discovery was still being done."));
+			UE_LOG(YQZYLogEditor, Display, TEXT("Could not run ValidateCheckedOutContent because asset discovery was still being done."));
 		}
 		return;
 	}
@@ -165,7 +165,7 @@ bool UEditorValidator::ValidatePackages(const TArray<FString>& ExistingPackageNa
 	TArray<FString> AllPackagesToValidate = ExistingPackageNames;
 	for (const FString& DeletedPackageName : DeletedPackageNames)
 	{
-		UE_LOG(LogYQZYEditor, Display, TEXT("Adding referencers for deleted package %s to be verified"), *DeletedPackageName);
+		UE_LOG(YQZYLogEditor, Display, TEXT("Adding referencers for deleted package %s to be verified"), *DeletedPackageName);
 		TArray<FName> PackageReferencers;
 		AssetRegistry.GetReferencers(FName(*DeletedPackageName), PackageReferencers, UE::AssetRegistry::EDependencyCategory::Package);
 		for (const FName& Referencer : PackageReferencers)
@@ -173,7 +173,7 @@ bool UEditorValidator::ValidatePackages(const TArray<FString>& ExistingPackageNa
 			const FString ReferencerString = Referencer.ToString();
 			if (!DeletedPackageNames.Contains(ReferencerString) && !IsInUncookedFolder(ReferencerString))
 			{
-				UE_LOG(LogYQZYEditor, Display, TEXT("    Deleted package referencer %s was added to the queue to be verified"), *ReferencerString);
+				UE_LOG(YQZYLogEditor, Display, TEXT("    Deleted package referencer %s was added to the queue to be verified"), *ReferencerString);
 				AllPackagesToValidate.Add(ReferencerString);
 			}
 		}
@@ -186,7 +186,7 @@ bool UEditorValidator::ValidatePackages(const TArray<FString>& ExistingPackageNa
 	{
 		// Too much changed to verify, just pass it.
 		FString WarningMessage = FString::Printf(TEXT("Assets to validate (%d) exceeded -MaxPackagesToLoad=(%d). Skipping existing package validation."), AllPackagesToValidate.Num(), MaxPackagesToLoad);
-		UE_LOG(LogYQZYEditor, Warning, TEXT("%s"), *WarningMessage);
+		UE_LOG(YQZYLogEditor, Warning, TEXT("%s"), *WarningMessage);
 		OutAllWarningsAndErrors.Add(WarningMessage);
 		DataValidationLog.Warning(FText::FromString(WarningMessage));
 	}
@@ -232,7 +232,7 @@ bool UEditorValidator::ValidatePackages(const TArray<FString>& ExistingPackageNa
 						}
 					}
 					ensure(!WarningMessage.IsEmpty());
-					UE_LOG(LogYQZYEditor, Warning, TEXT("%s"), *WarningMessage);
+					UE_LOG(YQZYLogEditor, Warning, TEXT("%s"), *WarningMessage);
 					OutAllWarningsAndErrors.Add(WarningMessage);
 					DataValidationLog.Warning(FText::FromString(WarningMessage));
 					bAnyIssuesFound = true;
@@ -248,7 +248,7 @@ bool UEditorValidator::ValidatePackages(const TArray<FString>& ExistingPackageNa
 				{
 					if (!AssetToCheck.IsAssetLoaded())
 					{
-						UE_LOG(LogYQZYEditor, Display, TEXT("Preloading %s..."), *AssetToCheck.GetObjectPathString());
+						UE_LOG(YQZYLogEditor, Display, TEXT("Preloading %s..."), *AssetToCheck.GetObjectPathString());
 
 						// Start listening for load warnings
 						FYQZYValidationMessageGatherer ScopedPreloadMessageGatherer;
@@ -261,7 +261,7 @@ bool UEditorValidator::ValidatePackages(const TArray<FString>& ExistingPackageNa
 							// Repeat all errant load warnings as errors, so other CIS systems can treat them more severely (i.e. Build health will create an issue and assign it to a developer)
 							for (const FString& LoadWarning : ScopedPreloadMessageGatherer.GetAllWarnings())
 							{
-								UE_LOG(LogYQZYEditor, Error, TEXT("%s"), *LoadWarning);
+								UE_LOG(YQZYLogEditor, Error, TEXT("%s"), *LoadWarning);
 							}
 
 							OutAllWarningsAndErrors.Append(ScopedPreloadMessageGatherer.GetAllWarningsAndErrors());
@@ -306,7 +306,7 @@ bool UEditorValidator::ValidateProjectSettings()
 		if (bDeveloperMode)
 		{
 			const FString ErrorMessage(TEXT("The project setting version of Python's bDeveloperMode should not be checked in. Use the editor preference version instead!"));
-			UE_LOG(LogYQZYEditor, Error, TEXT("%s"), *ErrorMessage);
+			UE_LOG(YQZYLogEditor, Error, TEXT("%s"), *ErrorMessage);
 			ValidationLog.Error(FText::AsCultureInvariant(ErrorMessage));
 			bSuccess = false;
 		}
@@ -442,7 +442,7 @@ void UEditorValidator::GetChangedAssetsForCode(IAssetRegistry& AssetRegistry, co
 				ClassNames.Add(ModifiedClass->GetClassPathName());
 				AssetRegistry.GetDerivedClassNames(ClassNames, TSet<FTopLevelAssetPath>(), DerivedClassNames);
 
-				UE_LOG(LogYQZYEditor, Display, TEXT("Validating Subclasses of %s in %s + %s"), *ModifiedClass->GetName(), *ChangedHeaderModule, *ChangedHeaderReleativeToModule);
+				UE_LOG(YQZYLogEditor, Display, TEXT("Validating Subclasses of %s in %s + %s"), *ModifiedClass->GetName(), *ChangedHeaderModule, *ChangedHeaderReleativeToModule);
 
 				FARFilter Filter;
 				Filter.bRecursiveClasses = true;
@@ -463,14 +463,14 @@ void UEditorValidator::GetChangedAssetsForCode(IAssetRegistry& AssetRegistry, co
 								const FTopLevelAssetPath ClassObjectPath(FPackageName::ExportTextPathToObjectPath(ClassFromData));
 								if (DerivedClassNames.Contains(ClassObjectPath))
 								{
-									UE_LOG(LogYQZYEditor, Display, TEXT("\tAdding %s To Validate"), *PackageName);
+									UE_LOG(YQZYLogEditor, Display, TEXT("\tAdding %s To Validate"), *PackageName);
 
 									BlueprintsDerivedFromNativeModifiedClasses.Emplace(AssetData);
 
 									if (BlueprintsDerivedFromNativeModifiedClasses.Num() >= GMaxAssetsChangedByAHeader)
 									{
 										bTooManyFiles = true;
-										UE_LOG(LogYQZYEditor, Display, TEXT("Too many assets invalidated (Max %d) by change to, %s + %s"), GMaxAssetsChangedByAHeader, *ChangedHeaderModule, *ChangedHeaderReleativeToModule);
+										UE_LOG(YQZYLogEditor, Display, TEXT("Too many assets invalidated (Max %d) by change to, %s + %s"), GMaxAssetsChangedByAHeader, *ChangedHeaderModule, *ChangedHeaderReleativeToModule);
 										return false; // Stop enumerating.
 									}
 								}

@@ -20,7 +20,7 @@
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(YQZYCheatManager)
 
-DEFINE_LOG_CATEGORY(LogYQZYCheat);
+DEFINE_LOG_CATEGORY(YQZYLogCheat);
 
 namespace YQZYCheat
 {
@@ -81,7 +81,7 @@ void UYQZYCheatManager::CheatOutputText(const FString& TextToOutput)
 	}
 
 	// Output to log.
-	UE_LOG(LogYQZYCheat, Display, TEXT("%s"), *TextToOutput);
+	UE_LOG(YQZYLogCheat, Display, TEXT("%s"), *TextToOutput);
 #endif // USING_CHEAT_MANAGER
 }
 
@@ -250,7 +250,7 @@ void UYQZYCheatManager::AddTagToSelf(FString TagName)
 	}
 	else
 	{
-		UE_LOG(LogYQZYCheat, Display, TEXT("AddTagToSelf: Could not find any tag matching [%s]."), *TagName);
+		UE_LOG(YQZYLogCheat, Display, TEXT("AddTagToSelf: Could not find any tag matching [%s]."), *TagName);
 	}
 }
 
@@ -266,7 +266,7 @@ void UYQZYCheatManager::RemoveTagFromSelf(FString TagName)
 	}
 	else
 	{
-		UE_LOG(LogYQZYCheat, Display, TEXT("RemoveTagFromSelf: Could not find any tag matching [%s]."), *TagName);
+		UE_LOG(YQZYLogCheat, Display, TEXT("RemoveTagFromSelf: Could not find any tag matching [%s]."), *TagName);
 	}
 }
 
