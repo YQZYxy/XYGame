@@ -17,7 +17,7 @@ UBPItemPool* UBPItemPool::Instance()
 		ItemPool_ptr = NewObject<UBPItemPool>();
 		if (!ItemPool_ptr->Init())
 		{
-			LogError("%s OnReload %d ", __FUNCTION__, __LINE__);
+			YQZYError("%s OnReload %d ", __FUNCTION__, __LINE__);
 			ItemPool_ptr->MarkAsGarbage();
 			return nullptr;
 		}
@@ -75,7 +75,7 @@ bool UBPItemPool::Init()
 
 		if (pRow->item_id <= 0 || pRow->item_id >= MAX_ITEM_ID || pRow->max_num <= 0)
 		{
-			LogError("read by row name --- RowName:%s, ID:%d, max_num:%d  error", *(name.ToString()), pRow->item_id, pRow->max_num);
+			YQZYError("read by row name --- RowName:%s, ID:%d, max_num:%d  error", *(name.ToString()), pRow->item_id, pRow->max_num);
 			return false;
 		}
 

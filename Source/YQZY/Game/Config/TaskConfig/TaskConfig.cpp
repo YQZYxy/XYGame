@@ -53,7 +53,7 @@ bool UTaskConfig::InitMainTaskDataCfg(const FName& path, FString& err)
 
 		if (pRow->id < 0 || pRow->pre_task < 0 || pRow->stage < 0)
 		{
-			LogError(" %s --- RowName:%s, ID:%d, pre_task:%d stage:%d", __FUNCTION__, *(name.ToString()), pRow->id, pRow->pre_task,pRow->stage);
+			YQZYError(" %s --- RowName:%s, ID:%d, pre_task:%d stage:%d", __FUNCTION__, *(name.ToString()), pRow->id, pRow->pre_task,pRow->stage);
 			return false;
 		}
 
@@ -80,7 +80,7 @@ bool UTaskConfig::InitModuleTaskDataCfg(const FName& path, FString& err)
 
 		if (pRow->id < 0 || pRow->pre_task < 0 || pRow->stage < 0)
 		{
-			LogError(" %s --- RowName:%s, ID:%d, pre_task:%d stage:%d", __FUNCTION__, *(name.ToString()), pRow->id, pRow->pre_task,pRow->stage);
+			YQZYError(" %s --- RowName:%s, ID:%d, pre_task:%d stage:%d", __FUNCTION__, *(name.ToString()), pRow->id, pRow->pre_task,pRow->stage);
 			return false;
 		}
 

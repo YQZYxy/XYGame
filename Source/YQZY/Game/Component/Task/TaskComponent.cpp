@@ -23,19 +23,19 @@ void UTaskComponent::BeginPlay()
 
 	if(ETASKTYPE_MAX == m_task_type)
 	{
-		LogError("%d m_task_type[%d] ",__LINE__, m_task_type);
+		YQZYError("%d m_task_type[%d] ",__LINE__, m_task_type);
 		return;		
 	}
 
 	if(ETASKMODULETYPE_ZHI_YIN > m_module_task_type || ETASKMODULETYPE_MAX <= m_module_task_type)
 	{
-		LogError("%d m_module_task_type[%d] ",__LINE__, m_module_task_type);
+		YQZYError("%d m_module_task_type[%d] ",__LINE__, m_module_task_type);
 		return;
 	}
 
 	if(0 >= m_task_id)
 	{
-		LogError("%d m_task_id[%d] ",__LINE__, m_task_id);
+		YQZYError("%d m_task_id[%d] ",__LINE__, m_task_id);
 		return;
 	}
 	
@@ -75,7 +75,7 @@ bool UTaskComponent::OnUnlock(const FRoleModuleParam& role_info)
 
 	case ETASKTYPE_MAX:
 		{
-			LogError("%d m_task_type[%d] ",__LINE__, m_task_type);
+			YQZYError("%d m_task_type[%d] ",__LINE__, m_task_type);
 			return false;
 		}
 		
@@ -172,7 +172,7 @@ bool UTaskComponent::OnTaskFinish()
 
 	case ETASKTYPE_MAX:
 		{
-			LogError("%d m_task_type[%d] ",__LINE__, m_task_type);
+			YQZYError("%d m_task_type[%d] ",__LINE__, m_task_type);
 			return false;
 		}
 

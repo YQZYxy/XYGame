@@ -19,7 +19,7 @@ public:
 {																	\
 	if(m_class_config_map.Contains(#class_type))					\
 	{																\
-		LogFatal(#class_type);										\
+		YQZYFatal(#class_type);										\
 	}																\
 	m_class_config_map.Add(#class_type, NewObject<class_type>());	\
 }

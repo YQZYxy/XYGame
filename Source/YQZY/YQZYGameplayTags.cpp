@@ -86,7 +86,7 @@ namespace YQZYGameplayTags
 			{
 				if (TestTag.ToString().Contains(TagString))
 				{
-					LogError("Could not find exact match for tag [%s] but found partial match on tag [%s].", *TagString, *TestTag.ToString());
+					YQZYError("Could not find exact match for tag [%s] but found partial match on tag [%s].", *TagString, *TestTag.ToString());
 					Tag = TestTag;
 					break;
 				}

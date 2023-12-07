@@ -95,7 +95,7 @@ void ULineTreaComponent::CreateLineTreaSingleByCamera()
 	FVector BeginLoc = m_CameraComp->GetComponentLocation();
 	FVector EndLoc = BeginLoc + m_CameraComp->GetForwardVector() * m_LengthLoc;  //射线结束位置
 
-	LogError("BeginLoc[%d] EndLoc[%d] Forward[%d], ", BeginLoc, EndLoc, m_CameraComp->GetForwardVector());
+	YQZYError("BeginLoc[%d] EndLoc[%d] Forward[%d], ", BeginLoc, EndLoc, m_CameraComp->GetForwardVector());
 	if (nullptr == m_IgnoredActor)
 	{
 		m_HitResult = CreateLineTreaSingleByChannel(nullptr, BeginLoc, EndLoc,m_CollisionChannel);

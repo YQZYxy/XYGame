@@ -86,7 +86,7 @@ bool ULogicConfigManager::InitPath()
 	UDataTable* pDataTable = LoadObject<UDataTable>(NULL, TEXT("/Script/Engine.DataTable'/Game/DataTable/Config/ConfigManager.ConfigManager'")); ///Script/Engine.DataTable'
 	if (!pDataTable)
 	{
-		LogError("ULogicConfigManager LoadObject NULL ");
+		YQZYError("ULogicConfigManager LoadObject NULL ");
 		return false;
 	}
 	FString ContextString;
@@ -102,7 +102,7 @@ bool ULogicConfigManager::InitPath()
 
 		if (pRow->class_type.IsNone() || pRow->path.IsNone())
 		{
-			LogError("read by row name --- RowName:%s, ID:%d, max_num:%d  error");
+			YQZYError("read by row name --- RowName:%s, ID:%d, max_num:%d  error");
 			return false;
 		}
 
@@ -118,7 +118,7 @@ bool ULogicConfigManager::Init()
 	{
 		if (nullptr == it_config.Value)
 		{
-			LogError("config: %s is nullptr", it_config.Key);
+			YQZYError("config: %s is nullptr", it_config.Key);
 			return false;
 		}
 	}
@@ -128,20 +128,20 @@ bool ULogicConfigManager::Init()
 		auto it = m_class_config_map.Find(table_data.Key);
 		if (nullptr == it)
 		{
-			LogError("%s %d Init Cfg %s ", __FUNCTION__, __LINE__, *table_data.Value.ToString());
+			YQZYError("%s %d Init Cfg %s ", __FUNCTION__, __LINE__, *table_data.Value.ToString());
 			return false;
 		}
 		ULogicConfig* cfg = (ULogicConfig*)*it;
 		if (nullptr == cfg)
 		{
-			LogError("%s %d Init Cfg %s ", __FUNCTION__, __LINE__, *table_data.Value.ToString());
+			YQZYError("%s %d Init Cfg %s ", __FUNCTION__, __LINE__, *table_data.Value.ToString());
 			return false;
 		}
 		FString error;
 
 		if (!cfg->Init(table_data.Value, error))
 		{
-			LogError("error_info[ %s ]", *error);
+			YQZYError("error_info[ %s ]", *error);
 			return false;
 		}
 	}

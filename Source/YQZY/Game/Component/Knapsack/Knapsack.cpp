@@ -40,7 +40,7 @@ void UKnapsack::Init()
 {
 	if (!ITEMPOOL->Instance()->Init())
 	{
-		LogError("ITEMPOOL->Init()  error");
+		YQZYError("ITEMPOOL->Init()  error");
 	}
 
 
@@ -51,7 +51,7 @@ void UKnapsack::Init()
 			auto it = ITEMPOOL->Instance()->GetItemBaseData(i);
 			if (it.IsValid())
 			{
-				LogWarning("id[%d] max_num[%d] ", it.item_id, it.max_num);
+				YQZYWarning("id[%d] max_num[%d] ", it.item_id, it.max_num);
 			}
 
 		}
