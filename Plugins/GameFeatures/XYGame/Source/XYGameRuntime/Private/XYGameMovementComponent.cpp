@@ -2,7 +2,7 @@
 
 #include "XYGameMovementComponent.h"
 
-#include "GameplayAbilities/Public/AbilitySystemGlobals.h"
+#include "AbilitySystemGlobals.h"
 #include "XYGameAttributeSet.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(XYGameMovementComponent)
