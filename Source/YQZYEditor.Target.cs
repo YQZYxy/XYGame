@@ -8,13 +8,17 @@ public class YQZYEditorTarget : TargetRules
 	public YQZYEditorTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Editor;
-		DefaultBuildSettings = BuildSettingsVersion.V2;
-        IncludeOrderVersion = EngineIncludeOrderVersion.Latest;
 
         ExtraModuleNames.AddRange(new string[] { "YQZY", "YQZYEditor" });
 
-        YQZYTarget.ApplySharedYQZYTargetSettings(this);
+		if (!bBuildAllModules)
+		{
+			NativePointerMemberBehaviorOverride = PointerMemberBehavior.Disallow;
+		}
 
-        EnablePlugins.Add("RemoteSession");
-    }
+		YQZYTarget.ApplySharedYQZYTargetSettings(this);
+
+		// This is used for touch screen development along with the "Unreal Remote 2" app
+		EnablePlugins.Add("RemoteSession");
+	}
 }
