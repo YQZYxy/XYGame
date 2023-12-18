@@ -68,7 +68,7 @@ DATE_ADD(date, INTERVAL exprtype);                           DATEDIFF(date1,date
  
 SELECT name ,DATEDIFF(CURDATE(),entrydate) '入职天数' from emp order by DATEDIFF(CURDATE(),entrydate) DESC;
 
---****约束****  NOT NULL    (unique)UNIQUE      (primary)PRIMARY KEY     (defuse)DEFAULT '1'     (check)CHECK(name>0) primary  (after) AFTER "id"
+--****约束****  NOT NULL    (unique)UNIQUE      (primary)PRIMARY KEY     (defuse)DEFAULT '1'     (check)CHECK(name>0) primary    (after)AFTER "id"
 create table wholesale(
     id int unsigned primary key auto_increment COMMENT '编号',
     name varchar(20) not NULL unique COMMENT '产品名字',
