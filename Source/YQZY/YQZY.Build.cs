@@ -10,8 +10,9 @@ public class YQZY : ModuleRules
 
         PublicIncludePaths.AddRange(
 		new string[] {
-                "YQZY"
-		    }
+                "YQZY",
+                "YQZY/Game"
+            }
         );
 
         PublicDependencyModuleNames.AddRange(

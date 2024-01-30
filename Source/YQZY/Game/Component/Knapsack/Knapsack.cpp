@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Knapsack.h"
-#include "Game/Struct/BPItemPool.h"
+#include "Game/Global/BPItemPool.h"
 #include "Game/Struct/ItemData.h"
 #include <set>
 #include "YQZYLog.h"
