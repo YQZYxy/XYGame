@@ -11,11 +11,12 @@ class YQZY_API UEventHandlerSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 public:
-	UEventHandlerSubsystem();
-    void Init();
+    virtual bool ShouldCreateSubsystem(UObject* Outer) const;
+	virtual void Initialize(FSubsystemCollectionBase& Collection);
+	virtual void Deinitialize();
 
 public:
-
+    
 public:
     void OnTaskFinishEvent( AYQZYCharacter* role, int task_type, int task_module_type);
     void OnTaskSubFinishEvent( AYQZYCharacter* role, int task_type, int task_module_type);

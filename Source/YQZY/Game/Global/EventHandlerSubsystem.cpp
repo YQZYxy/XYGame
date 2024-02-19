@@ -5,14 +5,21 @@
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(EventHandlerSubsystem)
 
-UEventHandlerSubsystem::UEventHandlerSubsystem()
-{
 
+bool UEventHandlerSubsystem::ShouldCreateSubsystem(UObject* Outer) const
+{
+	Super::ShouldCreateSubsystem(Outer);
+	return true;
 }
-
-void UEventHandlerSubsystem::Init()
+ 
+void UEventHandlerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
-
+	Super::Initialize(Collection);
+}
+ 
+void UEventHandlerSubsystem::Deinitialize()
+{
+	Super::Deinitialize();
 }
 
 void UEventHandlerSubsystem::OnTaskFinishEvent( AYQZYCharacter* role, int task_type, int task_module_type)
