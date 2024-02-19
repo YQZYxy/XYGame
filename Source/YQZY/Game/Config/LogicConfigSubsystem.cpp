@@ -71,6 +71,13 @@ LogicConfigSubsystem::LogicConfigSubsystem()
 // 	return true;
 // }
 
+bool LogicConfigSubsystem::OnReload()
+{
+	staitc TMap<FName, ULogicConfig*> class_config_map; class_config_map.Clear();
+	
+
+}
+
 ULogicConfig* LogicConfigSubsystem::GetConfigByName(FName class_name)
 {
 	auto it = m_class_config_map.Find(class_name);

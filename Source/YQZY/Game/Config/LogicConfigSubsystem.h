@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
-#include "Game/Config/LogicConfig.h"
+//#include "Game/Config/LogicConfig.h"
 #include "LogicConfigManager.generated.h"
 
 USTRUCT(BlueprintType)
@@ -56,11 +56,11 @@ public:
 	GET_CONFIG(UTaskConfig);
 
 public:
-	// UFUNCTION(BlueprintCallable, Category = "AYQZY_LogicConfigManager")
-	// bool Init();
+	UFUNCTION(BlueprintCallable, Category = "AYQZY_LogicConfigManager")
+	bool Init();
 
-	// UFUNCTION(BlueprintCallable, Category = "LogicConfigManager")
-	// static bool OnReload();
+	UFUNCTION(BlueprintCallable, Category = "LogicConfigManager")
+	static bool OnReload();
 
 	// UFUNCTION(BlueprintCallable, Category = "LogicConfigManager")
 	// static ULogicConfigManager* GetLogicConfigManagerInstance();
