@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Subsystems/GameInstanceSubsystem.h"
 #include "Game/Config/LogicConfig.h"
 #include "LogicConfigManager.generated.h"
 
@@ -42,29 +43,29 @@ class UWeaponConfig;
 class UTaskConfig;
 
 
-#define LCMCFG ULogicConfigManager::GetLogicConfigManagerInstance()
+#define LCMCFG ULogicConfigSubsystem::GetLogicConfigManagerInstance()
 
 UCLASS(Config = Game)
-class YQZY_API ULogicConfigManager : public UObject
+class YQZY_API ULogicConfigSubsystem  : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 public:
-	ULogicConfigManager();//在构造里面添加 NEW_CONFIG 对应类型
+	ULogicConfigSubsystem();//在构造里面添加 NEW_CONFIG 对应类型
 	
 	GET_CONFIG(UWeaponConfig);
 	GET_CONFIG(UTaskConfig);
 
 public:
-	UFUNCTION(BlueprintCallable, Category = "AYQZY_LogicConfigManager")
-	bool Init();
+	// UFUNCTION(BlueprintCallable, Category = "AYQZY_LogicConfigManager")
+	// bool Init();
 
-	UFUNCTION(BlueprintCallable, Category = "LogicConfigManager")
-	static bool OnReload();
+	// UFUNCTION(BlueprintCallable, Category = "LogicConfigManager")
+	// static bool OnReload();
 
-	UFUNCTION(BlueprintCallable, Category = "LogicConfigManager")
-	static ULogicConfigManager* GetLogicConfigManagerInstance();
-	UFUNCTION(BlueprintCallable, Category = "LogicConfigManager")
-	static void DeleteUObject();
+	// UFUNCTION(BlueprintCallable, Category = "LogicConfigManager")
+	// static ULogicConfigManager* GetLogicConfigManagerInstance();
+	// UFUNCTION(BlueprintCallable, Category = "LogicConfigManager")
+	// static void DeleteUObject();
 
 	UFUNCTION(BlueprintCallable, Category = "LogicConfigManager")
 		ULogicConfig* GetConfigByName(FName class_name);
@@ -79,7 +80,7 @@ private:
 
 public:
 	
-	//动态读取DataTable数据表格......
+	//动态读取DataTable数据表格
 	UFUNCTION(BlueprintCallable, DisplayName = "Fill Data Table from CSV String", Category = "DataTable")
 		static bool FillDataTableFromCSVString(UDataTable* DataTable, const FString& CSVString);
 
