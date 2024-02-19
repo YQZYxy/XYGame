@@ -78,6 +78,12 @@ bool ULogicConfigSubsystem::OnReload()
 	return true;
 }
 
+ULogicConfigSubsystem* ULogicConfigSubsystem::GetLogicConfigSubsystem(UWorld* world)
+{
+	UGameInstance* GameInstance = world ? world->GetGameInstance() : nullptr;
+	return GameInstance ? GameInstance->GetSubsystem<ULogicConfigSubsystem>() : nullptr;
+}
+
 ULogicConfig* ULogicConfigSubsystem::GetConfigByName(FName class_name)
 {
 	auto it = m_class_config_map.Find(class_name);

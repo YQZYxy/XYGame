@@ -228,11 +228,8 @@ bool UTaskComponent::CheckTaskByConfig( ETaskType type)
 	{
 		return false;
 	}
-
-	const UWorld* World = GetWorld();
-	UGameInstance* GameInstance = World ? World->GetGameInstance() : nullptr;
-	ULogicConfigSubsystem* LogicConfigSubsystem = GameInstance ? GameInstance->GetSubsystem<ULogicConfigSubsystem>() : nullptr;
-	UTaskConfig* config = LogicConfigSubsystem ? LogicConfigSubsystem->GetUTaskConfig() : nullptr;
+	UTaskConfig* config = LCS_SUB_CFG(UTaskConfig);
+	//UTaskConfig* config = LCMCFG ? LCMCFG->GetUTaskConfig() : nullptr;
 	if (nullptr == config)
 	{
 		return false;

@@ -25,7 +25,7 @@ public:
 	m_class_config_map.Add(#class_type, NewObject<class_type>());	\
 }
 
-#define GET_CONFIG(class_type)									\
+#define DEF_CONFIG(class_type)									\
 	UFUNCTION(BlueprintCallable, Category = "")					\
 	class_type* Get##class_type() const 						\
 {																\
@@ -45,12 +45,9 @@ class UTaskConfig;
 
 //#define LCMCFG ULogicConfigSubsystem::GetLogicConfigManagerInstance()
 
-#define LCMCFG(LogicConfigSubsystem)\
-{\
-	const UWorld* World = GetWorld();\
-	UGameInstance* GameInstance = World ? World->GetGameInstance() : nullptr;\
-	LogicConfigSubsystem = GameInstance ? GameInstance->GetSubsystem<ULogicConfigSubsystem>() : nullptr;\
-}
+#define LCS_SUB ULogicConfigSubsystem::GetLogicConfigSubsystem(GetWorld())
+
+#define LCS_SUB_CFG(class_type) ULogicConfigSubsystem::GetLogicConfigSubsystem(GetWorld()) ? ULogicConfigSubsystem::GetLogicConfigSubsystem(GetWorld())->Get##class_type():nullptr;
 
 UCLASS(Config = Game)
 class YQZY_API ULogicConfigSubsystem  : public UGameInstanceSubsystem
@@ -59,22 +56,25 @@ class YQZY_API ULogicConfigSubsystem  : public UGameInstanceSubsystem
 public:
 	ULogicConfigSubsystem();//在构造里面添加 NEW_CONFIG 对应类型
 	
-	GET_CONFIG(UWeaponConfig);
-	GET_CONFIG(UTaskConfig);
+	DEF_CONFIG(UWeaponConfig);
+	DEF_CONFIG(UTaskConfig);
 
 public:
-	UFUNCTION(BlueprintCallable, Category = "AYQZY_LogicConfigManager")
+	UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
 	bool Init();
 
-	UFUNCTION(BlueprintCallable, Category = "LogicConfigManager")
+	UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
 	static bool OnReload();
 
-	// UFUNCTION(BlueprintCallable, Category = "LogicConfigManager")
+	 UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
+	 static ULogicConfigSubsystem* GetLogicConfigSubsystem(UWorld* world);
+
+	// UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
 	// static ULogicConfigManager* GetLogicConfigManagerInstance();
-	// UFUNCTION(BlueprintCallable, Category = "LogicConfigManager")
+	// UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
 	// static void DeleteUObject();
 
-	UFUNCTION(BlueprintCallable, Category = "LogicConfigManager")
+	UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
 		ULogicConfig* GetConfigByName(FName class_name);
 
 private:
