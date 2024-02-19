@@ -1,4 +1,4 @@
-
+#include "LoginSubsystem.h"
 
 
 bool ULoginSubsystem::ShouldCreateSubsystem(UObject* Outer) const
@@ -22,4 +22,4 @@ void ULoginSubsystem::Deinitialize()
 
 
 
-RegisterPackage(s2cRoleList, S2CRoleList, ULoginSubsystem::OnS2CRoleList)
+//RegisterPackage(s2cRoleList, S2CRoleList, ULoginSubsystem::OnS2CRoleList)

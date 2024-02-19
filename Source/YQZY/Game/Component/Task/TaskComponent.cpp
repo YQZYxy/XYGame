@@ -1,7 +1,7 @@
 #include "TaskComponent.h"
 #include "YQZYLog.h"
 #include "Game/Config/TaskConfig/TaskConfig.h"
-#include "Game/Config/LogicConfigManager.h"
+#include "Game/Config/LogicConfigSubsystem.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(TaskComponent)
 
@@ -111,11 +111,15 @@ bool UTaskComponent::CheckModuleTaskUnlock(const FRoleModuleParam& role_info)
 		return false;
 	}
 
-	UTaskConfig* config = LCMCFG->GetUTaskConfig();
+	const UWorld* World = GetWorld();
+	UGameInstance* GameInstance = World ? World->GetGameInstance() : nullptr;
+	ULogicConfigSubsystem* LogicConfigSubsystem = GameInstance ? GameInstance->GetSubsystem<ULogicConfigSubsystem>() : nullptr;
+	UTaskConfig* config = LogicConfigSubsystem ? LogicConfigSubsystem->GetUTaskConfig() : nullptr;
 	if(nullptr == config)
 	{
 		return false;
 	}
+
 	const FTaskData* cfg = config->GetModuleTaskCfg(m_task_id);
 	if(nullptr == cfg)
 	{
@@ -225,8 +229,11 @@ bool UTaskComponent::CheckTaskByConfig( ETaskType type)
 		return false;
 	}
 
-	UTaskConfig* config =  LCMCFG->GetUTaskConfig();
-	if(nullptr == config)
+	const UWorld* World = GetWorld();
+	UGameInstance* GameInstance = World ? World->GetGameInstance() : nullptr;
+	ULogicConfigSubsystem* LogicConfigSubsystem = GameInstance ? GameInstance->GetSubsystem<ULogicConfigSubsystem>() : nullptr;
+	UTaskConfig* config = LogicConfigSubsystem ? LogicConfigSubsystem->GetUTaskConfig() : nullptr;
+	if (nullptr == config)
 	{
 		return false;
 	}

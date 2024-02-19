@@ -2,7 +2,7 @@
 
 
 #include "WeaponConfig.h"
-#include "Game/Config/LogicConfigManager.h"
+#include "Game/Config/LogicConfigSubsystem.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(WeaponConfig)
 

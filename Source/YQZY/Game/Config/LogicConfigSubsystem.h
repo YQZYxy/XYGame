@@ -3,7 +3,7 @@
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 //#include "Game/Config/LogicConfig.h"
-#include "LogicConfigManager.generated.h"
+#include "LogicConfigSubsystem.generated.h"
 
 USTRUCT(BlueprintType)
 struct FLogicConfigManagerData : public FTableRowBase
@@ -43,7 +43,14 @@ class UWeaponConfig;
 class UTaskConfig;
 
 
-#define LCMCFG ULogicConfigSubsystem::GetLogicConfigManagerInstance()
+//#define LCMCFG ULogicConfigSubsystem::GetLogicConfigManagerInstance()
+
+#define LCMCFG(LogicConfigSubsystem)\
+{\
+	const UWorld* World = GetWorld();\
+	UGameInstance* GameInstance = World ? World->GetGameInstance() : nullptr;\
+	LogicConfigSubsystem = GameInstance ? GameInstance->GetSubsystem<ULogicConfigSubsystem>() : nullptr;\
+}
 
 UCLASS(Config = Game)
 class YQZY_API ULogicConfigSubsystem  : public UGameInstanceSubsystem

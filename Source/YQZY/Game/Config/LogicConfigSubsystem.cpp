@@ -1,4 +1,4 @@
-#include "LogicConfigManager.h"
+#include "LogicConfigSubsystem.h"
 #include "YQZYLog.h"
 #include "LogicConfig.h"
 #include "Game/Config/Weaponconfig/WeaponConfig.h"
@@ -6,7 +6,7 @@
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(LogicConfigSubsystem)
 
-LogicConfigSubsystem::LogicConfigSubsystem()
+ULogicConfigSubsystem::ULogicConfigSubsystem()
 {
 	//添加
 	NEW_CONFIG(UWeaponConfig);
@@ -17,12 +17,12 @@ LogicConfigSubsystem::LogicConfigSubsystem()
 }
 
 
-// static LogicConfigSubsystem* logic_config_manager_ptr = nullptr;
-// LogicConfigSubsystem* LogicConfigSubsystem::GetLogicConfigManagerInstance()
+// static ULogicConfigSubsystem* logic_config_manager_ptr = nullptr;
+// ULogicConfigSubsystem* ULogicConfigSubsystem::GetLogicConfigManagerInstance()
 // {
 // 	if (!logic_config_manager_ptr)
 // 	{
-// 		logic_config_manager_ptr = NewObject<LogicConfigSubsystem>();
+// 		logic_config_manager_ptr = NewObject<ULogicConfigSubsystem>();
 // 		if (!logic_config_manager_ptr->Init())
 // 		{
 // 			logic_config_manager_ptr->MarkAsGarbage();
@@ -36,7 +36,7 @@ LogicConfigSubsystem::LogicConfigSubsystem()
 // 	return logic_config_manager_ptr;
 // }
 
-// void LogicConfigSubsystem::DeleteUObject()
+// void ULogicConfigSubsystem::DeleteUObject()
 // {
 // 	if (logic_config_manager_ptr)
 // 	{
@@ -47,9 +47,9 @@ LogicConfigSubsystem::LogicConfigSubsystem()
 // 	}
 // }
 
-// bool LogicConfigSubsystem::OnReload()
+// bool ULogicConfigSubsystem::OnReload()
 // {
-// 	LogicConfigSubsystem* temp_ptr = NewObject<LogicConfigSubsystem>();
+// 	ULogicConfigSubsystem* temp_ptr = NewObject<ULogicConfigSubsystem>();
 // 	if (temp_ptr && !temp_ptr->Init())
 // 	{
 // 		temp_ptr->MarkAsGarbage();
@@ -71,14 +71,14 @@ LogicConfigSubsystem::LogicConfigSubsystem()
 // 	return true;
 // }
 
-bool LogicConfigSubsystem::OnReload()
+bool ULogicConfigSubsystem::OnReload()
 {
-	staitc TMap<FName, ULogicConfig*> class_config_map; class_config_map.Clear();
+	TMap<FName, ULogicConfig*> class_config_map; 
 	
-
+	return true;
 }
 
-ULogicConfig* LogicConfigSubsystem::GetConfigByName(FName class_name)
+ULogicConfig* ULogicConfigSubsystem::GetConfigByName(FName class_name)
 {
 	auto it = m_class_config_map.Find(class_name);
 	if (nullptr == it)
@@ -89,12 +89,12 @@ ULogicConfig* LogicConfigSubsystem::GetConfigByName(FName class_name)
 	return *it;
 }
 
-bool LogicConfigSubsystem::InitPath()
+bool ULogicConfigSubsystem::InitPath()
 {	
 	UDataTable* pDataTable = LoadObject<UDataTable>(NULL, TEXT("/Script/Engine.DataTable'/Game/DataTable/Config/ConfigManager.ConfigManager'")); ///Script/Engine.DataTable'
 	if (!pDataTable)
 	{
-		YQZYError("LogicConfigSubsystem LoadObject NULL ");
+		YQZYError("ULogicConfigSubsystem LoadObject NULL ");
 		return false;
 	}
 	FString ContextString;
@@ -120,7 +120,7 @@ bool LogicConfigSubsystem::InitPath()
 	return true;
 }
 
-bool LogicConfigSubsystem::Init()
+bool ULogicConfigSubsystem::Init()
 {
 	for (auto& it_config : m_class_config_map)
 	{
@@ -162,7 +162,7 @@ bool LogicConfigSubsystem::Init()
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-bool LogicConfigSubsystem::FillDataTableFromCSVString(UDataTable* DataTable, const FString& CSVString)
+bool ULogicConfigSubsystem::FillDataTableFromCSVString(UDataTable* DataTable, const FString& CSVString)
 {
 	if (!DataTable || (CSVString.Len() == 0))
 	{
@@ -185,7 +185,7 @@ bool LogicConfigSubsystem::FillDataTableFromCSVString(UDataTable* DataTable, con
 
 }
 
-bool LogicConfigSubsystem::FillDataTableFromCSVFile(UDataTable* DataTable, const FString& CSVFilePath)
+bool ULogicConfigSubsystem::FillDataTableFromCSVFile(UDataTable* DataTable, const FString& CSVFilePath)
 {
 	FString CSVString;
 	if (FPlatformFileManager::Get().GetPlatformFile().FileExists(*CSVFilePath))
@@ -198,11 +198,11 @@ bool LogicConfigSubsystem::FillDataTableFromCSVFile(UDataTable* DataTable, const
 		UE_LOG(LogTemp, Warning, TEXT("error2"));
 		return false;
 	}
-	return LogicConfigSubsystem::FillDataTableFromCSVString(DataTable, CSVString);
+	return ULogicConfigSubsystem::FillDataTableFromCSVString(DataTable, CSVString);
 	UE_LOG(LogTemp, Warning, TEXT("success"));
 }
 
-bool LogicConfigSubsystem::FillDataTableFromJSONString(UDataTable* DataTable, const FString& JSONString)
+bool ULogicConfigSubsystem::FillDataTableFromJSONString(UDataTable* DataTable, const FString& JSONString)
 {
 	if (!DataTable || (JSONString.Len() == 0))
 	{
@@ -225,7 +225,7 @@ bool LogicConfigSubsystem::FillDataTableFromJSONString(UDataTable* DataTable, co
 	return true;
 }
 
-bool LogicConfigSubsystem::FillDataTableFromJSONFile(UDataTable* DataTable, const FString& JSONFilePath)
+bool ULogicConfigSubsystem::FillDataTableFromJSONFile(UDataTable* DataTable, const FString& JSONFilePath)
 {
 	FString JSONString;
 	if (FPlatformFileManager::Get().GetPlatformFile().FileExists(*JSONFilePath))
@@ -238,10 +238,10 @@ bool LogicConfigSubsystem::FillDataTableFromJSONFile(UDataTable* DataTable, cons
 
 		return false;
 	}
-	return LogicConfigSubsystem::FillDataTableFromJSONString(DataTable, JSONString);
+	return ULogicConfigSubsystem::FillDataTableFromJSONString(DataTable, JSONString);
 }
 
-void LogicConfigSubsystem::GetDataTableAsCSVString(UDataTable* DataTable, FString& CSVString)
+void ULogicConfigSubsystem::GetDataTableAsCSVString(UDataTable* DataTable, FString& CSVString)
 {
 	CSVString = FString();
 
@@ -285,10 +285,10 @@ void LogicConfigSubsystem::GetDataTableAsCSVString(UDataTable* DataTable, FStrin
 	}
 }
 
-void LogicConfigSubsystem::GetDataTableAsCSVFile(UDataTable* DataTable, const FString& CSVFilePath)
+void ULogicConfigSubsystem::GetDataTableAsCSVFile(UDataTable* DataTable, const FString& CSVFilePath)
 {
 	FString CSVString;
-	LogicConfigSubsystem::GetDataTableAsCSVString(DataTable, CSVString);
+	ULogicConfigSubsystem::GetDataTableAsCSVString(DataTable, CSVString);
 	if (CSVString.Len() == 0)
 	{
 		return;
