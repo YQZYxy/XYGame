@@ -60,12 +60,7 @@ public:
 	DEF_CONFIG(UTaskConfig);
 
 private:
-	static bool ULogicConfigSubsystem::InitObject(TMap<FName, ULogicConfig*>* class_config_map)
-	{
-		NEW_CONFIG(UWeaponConfig);
-		NEW_CONFIG(UTaskConfig);
-
-	}
+	static bool InitObject(TMap<FName, ULogicConfig*>& class_config_map);
 
 public:
     virtual bool ShouldCreateSubsystem(UObject* Outer) const;
@@ -73,10 +68,13 @@ public:
 	virtual void Deinitialize();
 
 	UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
-	static bool OnReload();
+	static bool OnReload(UWorld* world);
 
 	UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
 	static ULogicConfigSubsystem* GetLogicConfigSubsystem(UWorld* world);
+
+	UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
+	static bool LoadCfg(TMap<FName, ULogicConfig*>& class_config_map, const TMap<FName, FName>& data_path_map);
 
 	// UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
 	// static ULogicConfigManager* GetLogicConfigManagerInstance();
@@ -87,16 +85,15 @@ public:
 	ULogicConfig* GetConfigByName(FName class_name);
 
 	UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
-	TMap<FName, FName>* GetPathMap() {return &m_data_path_map;}
+	TMap<FName, FName>& GetPathMap() {return m_data_path_map;}
 
 	UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
-	bool SetClassConfigMap(const TMap<FName, ULogicConfig*>* class_config_map);
+	bool SetClassConfigMap(const TMap<FName, ULogicConfig*>& class_config_map);
 
 private:
 	bool InitPath();
-	static bool LoadCfg(TMap<FName, ULogicConfig*>* class_config_map, const TMap<FName, FName>* data_path_map);
 
-	std::mutex m_mutex; 
+
 	UPROPERTY()
 	TMap<FName, FName> m_data_path_map;
 	UPROPERTY()
