@@ -63,7 +63,7 @@ public:
 	virtual void Deinitialize();
 
 	UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
-	static bool OnReload(UWorld* world);
+	static bool OnReload(ULogicConfigSubsystem* in);
 
 	UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
 	static ULogicConfigSubsystem* GetLogicConfigSubsystem(UWorld* world);

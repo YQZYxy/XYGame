@@ -42,9 +42,9 @@ bool ULogicConfigSubsystem::InitObject(TMap<FName, ULogicConfig*>& class_config_
 	return true;
 }
 
-bool ULogicConfigSubsystem::OnReload(UWorld* world)
+bool ULogicConfigSubsystem::OnReload(ULogicConfigSubsystem* in)
 {
-	if (nullptr == world)
+	if (nullptr == in)
 	{
 		return false;
 	}
@@ -55,20 +55,16 @@ bool ULogicConfigSubsystem::OnReload(UWorld* world)
 		return false;
 	}
 
-	if (LCS_SUB(world))
+	if (!ULogicConfigSubsystem::LoadCfg(class_config_map, in->GetPathMap()))
 	{
-		if (!ULogicConfigSubsystem::LoadCfg(class_config_map, LCS_SUB(world)->GetPathMap()))
-		{
-			return false;
-		}
-
-		if (!LCS_SUB(world)->SetClassConfigMap(class_config_map))
-		{
-			return false;
-		}
+		return false;
 	}
 
-	
+	if (!in->SetClassConfigMap(class_config_map))
+	{
+		return false;
+	}
+
 	return true;
 }
 
@@ -79,14 +75,13 @@ bool ULogicConfigSubsystem::SetClassConfigMap(const TMap<FName, ULogicConfig*>& 
 		return false;
 	}
 
-	for (auto& it_config : m_class_config_map)
-	{
-		if (nullptr != it_config.Value)
-		{
-			delete it_config.Value;
-			it_config.Value = nullptr;
-		}
-	}
+	//for (auto& it_config : m_class_config_map)
+	//{
+	//	if (nullptr != it_config.Value)
+	//	{
+	//		it_config.Value = nullptr;
+	//	}
+	//}
 	m_class_config_map.Empty();
 	m_class_config_map = class_config_map;
 	
