@@ -9,46 +9,30 @@ UBPItemPool::UBPItemPool()
 
 }
 
-static UBPItemPool* ItemPool_ptr = nullptr;
-UBPItemPool* UBPItemPool::Instance()
+bool UBPItemPool::ShouldCreateSubsystem(UObject* Outer) const
 {
-	if (nullptr == ItemPool_ptr)
-	{
-		ItemPool_ptr = NewObject<UBPItemPool>();
-		if (!ItemPool_ptr->Init())
-		{
-			YQZYError("%s OnReload %d ", __FUNCTION__, __LINE__);
-			ItemPool_ptr->MarkAsGarbage();
-			return nullptr;
-		}
-		ItemPool_ptr->AddToRoot();
-	}
-
-	return ItemPool_ptr;
+	Super::ShouldCreateSubsystem(Outer);
+	return true;
 }
 
-
-void UBPItemPool::DeleteUObject()
+void UBPItemPool::Initialize(FSubsystemCollectionBase& Collection)
 {
-	if (nullptr != ItemPool_ptr)
-	{
-		ItemPool_ptr->m_item_pool.Empty();
-		ItemPool_ptr->RemoveFromRoot();
-		ItemPool_ptr = nullptr;
-	}
+	Super::Initialize(Collection);
+}
+
+void UBPItemPool::Deinitialize()
+{
+	Super::Deinitialize();
+}
+
+UBPItemPool* UBPItemPool::GetBPItemPool(UWorld* world)
+{
+	UGameInstance* GameInstance = world ? world->GetGameInstance() : nullptr;
+	return GameInstance ? GameInstance->GetSubsystem<UBPItemPool>() : nullptr;
 }
 
 bool UBPItemPool::OnReload()
 {
-	if (!ItemPool_ptr)
-	{
-		return false;
-	}
-
-	if (!ItemPool_ptr->Init())
-	{
-		return false;
-	}
 
 	return true;
 }

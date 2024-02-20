@@ -38,17 +38,19 @@ void UKnapsack::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 
 void UKnapsack::Init()
 {
-	if (!ITEMPOOL->Instance()->Init())
+	UBPItemPool* item_pool = ITEMPOOL(GetWorld());
+
+	if (item_pool && !item_pool->Init())
 	{
 		YQZYError("ITEMPOOL->Init()  error");
 	}
 
 
-	if (ITEMPOOL->Instance() != nullptr)
+	if (item_pool != nullptr)
 	{
 		for (int i = 1; i < 5; ++i)
 		{
-			auto it = ITEMPOOL->Instance()->GetItemBaseData(i);
+			auto it = item_pool->GetItemBaseData(i);
 			if (it.IsValid())
 			{
 				YQZYWarning("id[%d] max_num[%d] ", it.item_id, it.max_num);
@@ -69,7 +71,7 @@ void UKnapsack::OnAddItemList(TArray<FItemData> item_list, FString& reason)
 
 void UKnapsack::OnAddItemData(FItemData item, FString& reason)
 {
-	const FItemBaseData* item_base = ITEMPOOL->GetItemBaseDataPtr(item.item_id);
+	const FItemBaseData* item_base = ITEMPOOL(GetWorld()) ? ITEMPOOL(GetWorld())->GetItemBaseDataPtr(item.item_id): nullptr;
 	if (nullptr == item_base )
 	{
 		reason += "没有这个物品: ";
@@ -94,7 +96,7 @@ void UKnapsack::OnAddItemData(FItemData item, FString& reason)
 
 int UKnapsack::OnAddItemId(int32 item_id, int64 item_num, FString& reason)
 {
-	const FItemBaseData* item_base = ITEMPOOL->GetItemBaseDataPtr(item_id);
+	const FItemBaseData* item_base = ITEMPOOL(GetWorld()) ? ITEMPOOL(GetWorld())->GetItemBaseDataPtr(item_id) : nullptr;
 	if (nullptr == item_base)
 	{
 		reason += "没有这个物品: ";
@@ -159,7 +161,7 @@ void UKnapsack::OnConsumeItemData(FItemData item, FString& reason)
 
 int UKnapsack::OnConsumeItemId(int32 item_id, int64 item_num, FString& reason)
 {
-	if (!ITEMPOOL->FindItemById(item_id))
+	if (ITEMPOOL(GetWorld()) && !ITEMPOOL(GetWorld())->FindItemById(item_id))
 	{
 		reason += "没有这个物品: ";
 		reason += FString::FromInt(item_id);

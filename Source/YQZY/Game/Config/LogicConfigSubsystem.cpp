@@ -42,60 +42,6 @@ bool ULogicConfigSubsystem::InitObject(TMap<FName, ULogicConfig*>& class_config_
 	return true;
 }
 
-// static ULogicConfigSubsystem* logic_config_manager_ptr = nullptr;
-// ULogicConfigSubsystem* ULogicConfigSubsystem::GetLogicConfigManagerInstance()
-// {
-// 	if (!logic_config_manager_ptr)
-// 	{
-// 		logic_config_manager_ptr = NewObject<ULogicConfigSubsystem>();
-// 		if (!logic_config_manager_ptr->Init())
-// 		{
-// 			logic_config_manager_ptr->MarkAsGarbage();
-// 			GEngine->ForceGarbageCollection(true);
-// 			logic_config_manager_ptr = nullptr;
-// 			return nullptr;
-// 		}
-// 		logic_config_manager_ptr->AddToRoot();
-// 	}
-
-// 	return logic_config_manager_ptr;
-// }
-
-// void ULogicConfigSubsystem::DeleteUObject()
-// {
-// 	if (logic_config_manager_ptr)
-// 	{
-// 		logic_config_manager_ptr->m_data_path_map.Empty();
-// 		logic_config_manager_ptr->m_class_config_map.Empty();
-// 		logic_config_manager_ptr->RemoveFromRoot();
-// 		logic_config_manager_ptr = nullptr;
-// 	}
-// }
-
-// bool ULogicConfigSubsystem::OnReload()
-// {
-// 	ULogicConfigSubsystem* temp_ptr = NewObject<ULogicConfigSubsystem>();
-// 	if (temp_ptr && !temp_ptr->Init())
-// 	{
-// 		temp_ptr->MarkAsGarbage();
-// 		GEngine->ForceGarbageCollection(true);
-// 		return false;
-// 	}
-// 	temp_ptr->AddToRoot();
-
-// 	if (logic_config_manager_ptr)
-// 	{
-// 		logic_config_manager_ptr->RemoveFromRoot();
-// 		logic_config_manager_ptr->MarkAsGarbage();
-// 		GEngine->ForceGarbageCollection(true);
-// 		logic_config_manager_ptr = nullptr;
-// 	}
-
-// 	logic_config_manager_ptr = temp_ptr;
-
-// 	return true;
-// }
-
 bool ULogicConfigSubsystem::OnReload(UWorld* world)
 {
 	if (nullptr == world)

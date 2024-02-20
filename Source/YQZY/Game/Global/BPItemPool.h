@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
-
+#include "Subsystems/GameInstanceSubsystem.h"
 #include "Game/Config/LogicConfig.h"
 #include "CoreMinimal.h"
 #include "BPItemPool.generated.h"
@@ -38,26 +38,29 @@ public:
 };
 
 static const uint32_t MAX_ITEM_ID = 65535;
-#define ITEMPOOL UBPItemPool::Instance()
+#define ITEMPOOL(world) UBPItemPool::GetBPItemPool(world)
 /**
  *
  */
 UCLASS(Config = Game)
-class UBPItemPool : public UObject
+class UBPItemPool : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 public:
 	UBPItemPool();
+	virtual bool ShouldCreateSubsystem(UObject* Outer) const;
+	virtual void Initialize(FSubsystemCollectionBase& Collection);
+	virtual void Deinitialize();
+
+	UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
+	static UBPItemPool* GetBPItemPool(UWorld* world);
 
 	UFUNCTION(BlueprintCallable, Category = "ItemPool")
 	bool Init();
 
 	UFUNCTION(BlueprintCallable, Category = "ItemPool")
 	static bool OnReload();
-	UFUNCTION(BlueprintCallable, Category = "ItemPool")
-	static UBPItemPool* Instance();
-	UFUNCTION(BlueprintCallable, Category = "ItemPool")
-	static void DeleteUObject();
+
 
 	UFUNCTION(BlueprintCallable, Category = "ItemPool")
 	bool FindItemById(int item_id);

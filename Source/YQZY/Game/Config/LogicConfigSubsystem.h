@@ -34,20 +34,15 @@ public:
 	return (class_type*)*ptr;										\
 }
 
-//#define GET_CONFIG(class_type)\
-//	UFUNCTION(BlueprintCallable, Category = "")\
-//	class_type* Get##class_type() const{return (class_type*)class_config_map[#class_type];}
+#define LCS_SUB(world) ULogicConfigSubsystem::GetLogicConfigSubsystem(world)
+
+#define LCS_SUB_CFG(world,class_type) LCS_SUB(world) ? LCS_SUB(world)->Get##class_type():nullptr;
+
 
 class ULogicConfig;
 class UWeaponConfig;
 class UTaskConfig;
 
-
-//#define LCMCFG ULogicConfigSubsystem::GetLogicConfigManagerInstance()
-
-#define LCS_SUB(world) ULogicConfigSubsystem::GetLogicConfigSubsystem(world)
-
-#define LCS_SUB_CFG(world,class_type) LCS_SUB(world) ? LCS_SUB(world)->Get##class_type():nullptr;
 
 UCLASS(Config = Game)
 class YQZY_API ULogicConfigSubsystem  : public UGameInstanceSubsystem
@@ -75,11 +70,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
 	static bool LoadCfg(TMap<FName, ULogicConfig*>& class_config_map, const TMap<FName, FName>& data_path_map);
-
-	// UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
-	// static ULogicConfigManager* GetLogicConfigManagerInstance();
-	// UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
-	// static void DeleteUObject();
 
 	UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
 	ULogicConfig* GetConfigByName(FName class_name);
