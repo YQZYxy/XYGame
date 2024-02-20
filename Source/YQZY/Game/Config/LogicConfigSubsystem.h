@@ -18,20 +18,20 @@ public:
 
 #define NEW_CONFIG(class_type)										\
 {																	\
-	if(m_class_config_map.Contains(#class_type))					\
+	if(class_config_map.Contains(#class_type))					\
 	{																\
 		YQZYFatal(#class_type);										\
 	}																\
-	m_class_config_map.Add(#class_type, NewObject<class_type>());	\
+	class_config_map.Add(#class_type, NewObject<class_type>());	\
 }
 
-#define DEF_CONFIG(class_type)									\
-	UFUNCTION(BlueprintCallable, Category = "")					\
-	class_type* Get##class_type() const 						\
-{																\
-	auto ptr = m_class_config_map.Find(#class_type);			\
-	if (!ptr)return nullptr; 									\
-	return (class_type*)*ptr;									\
+#define DEF_CONFIG(class_type)										\
+	UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")	\
+	class_type* Get##class_type() const 							\
+{																	\
+	auto ptr = m_class_config_map.Find(#class_type);				\
+	if (!ptr)return nullptr; 										\
+	return (class_type*)*ptr;										\
 }
 
 //#define GET_CONFIG(class_type)\
@@ -45,9 +45,9 @@ class UTaskConfig;
 
 //#define LCMCFG ULogicConfigSubsystem::GetLogicConfigManagerInstance()
 
-#define LCS_SUB ULogicConfigSubsystem::GetLogicConfigSubsystem(GetWorld())
+#define LCS_SUB(world) ULogicConfigSubsystem::GetLogicConfigSubsystem(world)
 
-#define LCS_SUB_CFG(class_type) ULogicConfigSubsystem::GetLogicConfigSubsystem(GetWorld()) ? ULogicConfigSubsystem::GetLogicConfigSubsystem(GetWorld())->Get##class_type():nullptr;
+#define LCS_SUB_CFG(world,class_type) LCS_SUB(world) ? LCS_SUB(world)->Get##class_type():nullptr;
 
 UCLASS(Config = Game)
 class YQZY_API ULogicConfigSubsystem  : public UGameInstanceSubsystem
@@ -59,15 +59,24 @@ public:
 	DEF_CONFIG(UWeaponConfig);
 	DEF_CONFIG(UTaskConfig);
 
+private:
+	static bool ULogicConfigSubsystem::InitObject(TMap<FName, ULogicConfig*>* class_config_map)
+	{
+		NEW_CONFIG(UWeaponConfig);
+		NEW_CONFIG(UTaskConfig);
+
+	}
+
 public:
-	UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
-	bool Init();
+    virtual bool ShouldCreateSubsystem(UObject* Outer) const;
+	virtual void Initialize(FSubsystemCollectionBase& Collection);
+	virtual void Deinitialize();
 
 	UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
 	static bool OnReload();
 
-	 UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
-	 static ULogicConfigSubsystem* GetLogicConfigSubsystem(UWorld* world);
+	UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
+	static ULogicConfigSubsystem* GetLogicConfigSubsystem(UWorld* world);
 
 	// UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
 	// static ULogicConfigManager* GetLogicConfigManagerInstance();
@@ -75,11 +84,19 @@ public:
 	// static void DeleteUObject();
 
 	UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
-		ULogicConfig* GetConfigByName(FName class_name);
+	ULogicConfig* GetConfigByName(FName class_name);
+
+	UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
+	TMap<FName, FName>* GetPathMap() {return &m_data_path_map;}
+
+	UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
+	bool SetClassConfigMap(const TMap<FName, ULogicConfig*>* class_config_map);
 
 private:
 	bool InitPath();
+	static bool LoadCfg(TMap<FName, ULogicConfig*>* class_config_map, const TMap<FName, FName>* data_path_map);
 
+	std::mutex m_mutex; 
 	UPROPERTY()
 	TMap<FName, FName> m_data_path_map;
 	UPROPERTY()

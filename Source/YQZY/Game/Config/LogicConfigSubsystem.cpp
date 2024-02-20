@@ -6,16 +6,29 @@
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(LogicConfigSubsystem)
 
+
+
 ULogicConfigSubsystem::ULogicConfigSubsystem()
 {
-	//添加
-	NEW_CONFIG(UWeaponConfig);
-	NEW_CONFIG(UTaskConfig);
-
-
 	this->InitPath();
+	this->InitObject(m_class_config_map);
 }
 
+bool ULogicConfigSubsystem::ShouldCreateSubsystem(UObject* Outer) const
+{
+	Super::ShouldCreateSubsystem(Outer);
+	return true;
+}
+ 
+void ULogicConfigSubsystem::Initialize(FSubsystemCollectionBase& Collection)
+{
+	Super::Initialize(Collection);
+}
+ 
+void ULogicConfigSubsystem::Deinitialize()
+{
+	Super::Deinitialize();
+}
 
 // static ULogicConfigSubsystem* logic_config_manager_ptr = nullptr;
 // ULogicConfigSubsystem* ULogicConfigSubsystem::GetLogicConfigManagerInstance()
@@ -71,12 +84,57 @@ ULogicConfigSubsystem::ULogicConfigSubsystem()
 // 	return true;
 // }
 
-bool ULogicConfigSubsystem::OnReload()
+bool ULogicConfigSubsystem::OnReload(UWorld* world)
 {
+	if (nullptr == world)
+	{
+		return false;
+	}
 	TMap<FName, ULogicConfig*> class_config_map; 
+	if(!this->InitObject(class_config_map))
+	{
+		return false;
+	}
+
+	TMap<FName, FName>* path_map = nullptr;
+	if(LCS_SUB(world))
+	{
+		path_map = LCS_SUB(world)->GetPathMap();
+	}
+
+	if(!this->LoadCfg(class_config_map,path_map))
+	{
+		return false;
+	}
+
+	
 	
 	return true;
 }
+
+bool ULogicConfigSubsystem::SetClassConfigMap(const TMap<FName, ULogicConfig*>* class_config_map)
+{
+	if (nullptr == class_config_map)
+	{
+		return false;
+	}
+
+	std::lock<std::mutex> (m_mutex);
+	for (auto& it_config : m_class_config_map)
+	{
+		if (nullptr != it_config.Value)
+		{
+			delete it_config.Value;
+			it_config.Value = nullptr;
+		}
+	}
+	m_class_config_map.empty();
+	m_class_config_map.swap(class_config_map);
+	std::unlock<std::mutex> (m_mutex);
+	
+	return true;
+}
+
 
 ULogicConfigSubsystem* ULogicConfigSubsystem::GetLogicConfigSubsystem(UWorld* world)
 {
@@ -126,9 +184,19 @@ bool ULogicConfigSubsystem::InitPath()
 	return true;
 }
 
-bool ULogicConfigSubsystem::Init()
+bool ULogicConfigSubsystem::LoadCfg(TMap<FName, ULogicConfig*>* class_config_map, const TMap<FName, FName>* data_path_map)
 {
-	for (auto& it_config : m_class_config_map)
+	if (nullptr == class_config_map)
+	{
+		return false;
+	}
+
+	if (nullptr == data_path_map)
+	{
+		return false;
+	}
+
+	for (auto& it_config : *class_config_map)
 	{
 		if (nullptr == it_config.Value)
 		{
@@ -137,9 +205,9 @@ bool ULogicConfigSubsystem::Init()
 		}
 	}
 
-	for (auto& table_data : m_data_path_map)
+	for (auto& table_data : *data_path_map)
 	{
-		auto it = m_class_config_map.Find(table_data.Key);
+		auto it = class_config_map.Find(table_data.Key);
 		if (nullptr == it)
 		{
 			YQZYError("%s %d Init Cfg %s ", __FUNCTION__, __LINE__, *table_data.Value.ToString());

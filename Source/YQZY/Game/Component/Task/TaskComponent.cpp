@@ -228,8 +228,8 @@ bool UTaskComponent::CheckTaskByConfig( ETaskType type)
 	{
 		return false;
 	}
-	UTaskConfig* config = LCS_SUB_CFG(UTaskConfig);
-	//UTaskConfig* config = LCMCFG ? LCMCFG->GetUTaskConfig() : nullptr;
+	
+	UTaskConfig* config = LCS_SUB_CFG(GetWorld(),UTaskConfig);
 	if (nullptr == config)
 	{
 		return false;
