@@ -12,6 +12,7 @@ ULogicConfigSubsystem::ULogicConfigSubsystem()
 {
 	this->InitPath();
 	this->InitObject(m_class_config_map);
+	
 }
 
 bool ULogicConfigSubsystem::ShouldCreateSubsystem(UObject* Outer) const
@@ -23,6 +24,7 @@ bool ULogicConfigSubsystem::ShouldCreateSubsystem(UObject* Outer) const
 void ULogicConfigSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
+	ULogicConfigSubsystem::LoadCfg(m_class_config_map, m_data_path_map);
 }
  
 void ULogicConfigSubsystem::Deinitialize()
