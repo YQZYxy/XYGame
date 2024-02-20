@@ -18,23 +18,23 @@ public:
 		return  0 != item_id;
 	}
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DataTable int")
-		int32 type=0;		// 类型 
+		int32 type=0;		
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DataTable int")
 		int32 item_id = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DataTable int")
-		int64 max_num = 0;		//最大数量  
+		int64 max_num = 0;		
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DataTable int")
-		int32 IsOverlapping = 0;	//是否可以重叠
+		int32 IsOverlapping = 0;	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DataTable int")
-		int32 IsDiscard = 0;		//是否可以丢弃
+		int32 IsDiscard = 0;		
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DataTable FString")
-		FString name;			//物品名
+		FString name;			
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DataTable FString")
-		FString description;	//描述说明
+		FString description;	
 
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "DataTable 2D")
-	//	TSoftObjectPtr<UTexture> item_ui; //物品显示UI
+	//	TSoftObjectPtr<UTexture> item_ui; 
 };
 
 static const uint32_t MAX_ITEM_ID = 65535;
