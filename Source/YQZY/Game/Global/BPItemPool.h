@@ -52,7 +52,7 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection);
 	virtual void Deinitialize();
 
-	UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
+	UFUNCTION(BlueprintCallable, Category = "ItemPool")
 	static UBPItemPool* GetBPItemPool(UWorld* world);
 
 	UFUNCTION(BlueprintCallable, Category = "ItemPool")
