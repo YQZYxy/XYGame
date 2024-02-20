@@ -39,13 +39,6 @@ void UKnapsack::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 void UKnapsack::Init()
 {
 	UBPItemPool* item_pool = ITEMPOOL(GetWorld());
-
-	if (item_pool && !item_pool->Init())
-	{
-		YQZYError("ITEMPOOL->Init()  error");
-	}
-
-
 	if (item_pool != nullptr)
 	{
 		for (int i = 1; i < 5; ++i)

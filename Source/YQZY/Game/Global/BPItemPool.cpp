@@ -18,6 +18,7 @@ bool UBPItemPool::ShouldCreateSubsystem(UObject* Outer) const
 void UBPItemPool::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
+	this->Init();
 }
 
 void UBPItemPool::Deinitialize()
