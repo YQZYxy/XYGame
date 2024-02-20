@@ -18,11 +18,11 @@ public:
 
 #define NEW_CONFIG(class_type)										\
 {																	\
-	if(class_config_map.Contains(#class_type))					\
+	if(class_config_map.Contains(#class_type))						\
 	{																\
 		YQZYFatal(#class_type);										\
 	}																\
-	class_config_map.Add(#class_type, NewObject<class_type>());	\
+	class_config_map.Add(#class_type, NewObject<class_type>());		\
 }
 
 #define DEF_CONFIG(class_type)										\
