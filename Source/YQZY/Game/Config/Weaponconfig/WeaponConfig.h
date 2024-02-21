@@ -46,9 +46,9 @@ public:
 	virtual bool Init(const FName& path, FString& err)override;
 
 	UFUNCTION(BlueprintCallable, Category = "AYQZY_WeaponConfig")
-		bool FindItemById(int item_id);
-	UFUNCTION(BlueprintCallable, Category = "")
-		const FWeaponData GetItemBaseData(int item_id)const;
+	bool FindItemById(int item_id);
+	UFUNCTION(BlueprintCallable, Category = "AYQZY_WeaponConfig")
+	const FWeaponData GetItemBaseData(int item_id)const;
 
 	const FWeaponData* GetItemBaseDataPtr(int item_id)const;
 

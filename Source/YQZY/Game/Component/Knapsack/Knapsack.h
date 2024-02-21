@@ -39,29 +39,29 @@ public:
 	//添加物品
 	UFUNCTION(BlueprintCallable, Category = "AYQZY_Knapsack")
 		void OnAddItemList(TArray<FItemData> item_list, FString& reason);
-	UFUNCTION(BlueprintCallable, Category = "Knapsack")
+	UFUNCTION(BlueprintCallable, Category = "AYQZY_Knapsack")
 		void OnAddItemData(FItemData item, FString& reason);
-	UFUNCTION(BlueprintCallable, Category = "Knapsack")
+	UFUNCTION(BlueprintCallable, Category = "AYQZY_Knapsack")
 		int OnAddItemId(int32 item_id, int64 item_num, FString& reason);
 
 	//消耗物品 
-	UFUNCTION(BlueprintCallable, Category = "Knapsack")
+	UFUNCTION(BlueprintCallable, Category = "AYQZY_Knapsack")
 		void OnConsumeItemList(TArray<FItemData>& item_list, FString& reason);
-	UFUNCTION(BlueprintCallable, Category = "Knapsack")
+	UFUNCTION(BlueprintCallable, Category = "AYQZY_Knapsack")
 		void OnConsumeItemData(FItemData item, FString& reason);
-	UFUNCTION(BlueprintCallable, Category = "Knapsack")
+	UFUNCTION(BlueprintCallable, Category = "AYQZY_Knapsack")
 		int OnConsumeItemId(int32 item_id, int64 item_num, FString& reason);
 	 
 	//销毁物品
-	UFUNCTION(BlueprintCallable, Category = "Knapsack")
+	UFUNCTION(BlueprintCallable, Category = "AYQZY_Knapsack")
 		void OnDestroyedItemByIdOrIndex(const int32 id, int32 index = -1);
 	//交换背包格子内物品
-	UFUNCTION(BlueprintCallable, Category = "Knapsack")
+	UFUNCTION(BlueprintCallable, Category = "AYQZY_Knapsack")
 		void OnSwapItem(const int32 index_A, const int32 index_B);
 
 public:
 	//背包格子大小	默认9 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Assets")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AYQZY_Knapsack")
 		int32 knapsack_size;
 	//拥有者
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -72,6 +72,6 @@ public:
 
 protected:
 	//背包结构体数组物品数据
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Assets")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AYQZY_Knapsack")
 		TArray<FItemData> m_knapsack;
 };

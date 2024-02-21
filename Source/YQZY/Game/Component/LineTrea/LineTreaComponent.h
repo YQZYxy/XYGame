@@ -53,14 +53,14 @@ public:
 
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AConfig")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AYQZY_LineTreaComp")
 		float m_LengthLoc;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AConfig")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AYQZY_LineTreaComp")
 		TEnumAsByte<ECollisionChannel> m_CollisionChannel;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AConfig")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AYQZY_LineTreaComp")
 		TObjectPtr<UCameraComponent> m_CameraComp;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AConfig")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AYQZY_LineTreaComp")
 		TObjectPtr<AActor> m_IgnoredActor;
 
 private:

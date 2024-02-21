@@ -63,22 +63,22 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection);
 	virtual void Deinitialize();
 
-	UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
+	UFUNCTION(BlueprintCallable, Category = "AYQZY_LogicConfigSubsystem")
 	static bool OnReload(ULogicConfigSubsystem* in);
 
-	UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
+	UFUNCTION(BlueprintCallable, Category = "AYQZY_LogicConfigSubsystem")
 	static ULogicConfigSubsystem* GetLogicConfigSubsystem(UWorld* world);
 
-	UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
+	UFUNCTION(BlueprintCallable, Category = "AYQZY_LogicConfigSubsystem")
 	static bool LoadCfg(TMap<FName, ULogicConfig*>& class_config_map, const TMap<FName, FName>& data_path_map);
 
-	UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
+	UFUNCTION(BlueprintCallable, Category = "AYQZY_LogicConfigSubsystem")
 	ULogicConfig* GetConfigByName(FName class_name);
 
-	UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
+	UFUNCTION(BlueprintCallable, Category = "AYQZY_LogicConfigSubsystem")
 	TMap<FName, FName>& GetPathMap() {return m_data_path_map;}
 
-	UFUNCTION(BlueprintCallable, Category = "LogicConfigSubsystem")
+	UFUNCTION(BlueprintCallable, Category = "AYQZY_LogicConfigSubsystem")
 	bool SetClassConfigMap(const TMap<FName, ULogicConfig*>& class_config_map);
 
 private:

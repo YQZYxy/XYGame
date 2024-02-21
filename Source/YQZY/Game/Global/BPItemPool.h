@@ -52,19 +52,19 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection);
 	virtual void Deinitialize();
 
-	UFUNCTION(BlueprintCallable, Category = "ItemPool")
+	UFUNCTION(BlueprintCallable, Category = "AYQZY_ItemPool")
 	static UBPItemPool* GetBPItemPool(UWorld* world);
 
-	UFUNCTION(BlueprintCallable, Category = "ItemPool")
+	UFUNCTION(BlueprintCallable, Category = "AYQZY_ItemPool")
 	bool Init();
 
-	UFUNCTION(BlueprintCallable, Category = "ItemPool")
+	UFUNCTION(BlueprintCallable, Category = "AYQZY_ItemPool")
 	static bool OnReload();
 
 
-	UFUNCTION(BlueprintCallable, Category = "ItemPool")
+	UFUNCTION(BlueprintCallable, Category = "AYQZY_ItemPool")
 	bool FindItemById(int item_id);
-	UFUNCTION(BlueprintCallable,Category = "ItemPool")
+	UFUNCTION(BlueprintCallable,Category = "AYQZY_ItemPool")
 	const FItemBaseData GetItemBaseData(int item_id)const;
 	
 

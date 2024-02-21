@@ -28,17 +28,17 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "AYQZY_TaskComp")
 	bool OnUnlock(const FRoleModuleParam& role_info);
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintImplementableEvent, Category = "AYQZY_TaskComp")
 	void OnUnlockBpEvent();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "AYQZY_TaskComp")
 	bool OnTaskFinish();
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintImplementableEvent, Category = "AYQZY_TaskComp")
 	void OnTaskFinishBpEvent();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "AYQZY_TaskComp")
 	bool OnTaskSubFinish();
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintImplementableEvent, Category = "AYQZY_TaskComp")
 	void OnTaskSubFinishBpEvent();
 
 
@@ -63,14 +63,14 @@ private:
 	bool CheckModuleTaskUnlock(const FRoleModuleParam& role_info);
 	
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AConfig")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AYQZY_TaskComp")
 	TEnumAsByte<ETaskType> m_task_type;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AConfig")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AYQZY_TaskComp")
 	TEnumAsByte<ETaskModuleType> m_module_task_type;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AConfig")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AYQZY_TaskComp")
 	int32 m_task_id;
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AConfig")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AYQZY_TaskComp")
 	FTaskInfo m_task_info;
 };
