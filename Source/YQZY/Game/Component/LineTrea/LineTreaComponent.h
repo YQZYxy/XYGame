@@ -46,9 +46,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 		TArray<struct FHitResult> CreateLineTreaMultiByVector(const AActor* Ignored, FVector BeginLoc, FVector Forward, float LengthLoc, ECollisionChannel CollisionChannel);
 	
-	UFUNCTION(BlueprintCallable)
+	//UFUNCTION(BlueprintCallable)
 	FHitResult CreateLineTreaSingleByChannel(const AActor* Ignored, FVector BeginLoc, FVector EndLoc, ECollisionChannel CollisionChannel = ECollisionChannel::ECC_GameTraceChannel1);
-	UFUNCTION(BlueprintCallable)
+	//UFUNCTION(BlueprintCallable)
 	TArray<struct FHitResult> CreateLineTreaMultiByChannel(const AActor* Ignored, FVector BeginLoc, FVector EndLoc, ECollisionChannel CollisionChannel = ECollisionChannel::ECC_GameTraceChannel1);
 
 
