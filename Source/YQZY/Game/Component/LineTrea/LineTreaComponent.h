@@ -45,10 +45,12 @@ public:
 		FHitResult CreateLineTreaByVector(const AActor* Ignored, FVector BeginLoc, FVector Forward, float LengthLoc , ECollisionChannel CollisionChannel);
 	UFUNCTION(BlueprintCallable)
 		TArray<struct FHitResult> CreateLineTreaMultiByVector(const AActor* Ignored, FVector BeginLoc, FVector Forward, float LengthLoc, ECollisionChannel CollisionChannel);
-
-private:
+	
+	UFUNCTION(BlueprintCallable)
 	FHitResult CreateLineTreaSingleByChannel(const AActor* Ignored, FVector BeginLoc, FVector EndLoc, ECollisionChannel CollisionChannel = ECollisionChannel::ECC_GameTraceChannel1);
+	UFUNCTION(BlueprintCallable)
 	TArray<struct FHitResult> CreateLineTreaMultiByChannel(const AActor* Ignored, FVector BeginLoc, FVector EndLoc, ECollisionChannel CollisionChannel = ECollisionChannel::ECC_GameTraceChannel1);
+
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AConfig")
@@ -64,5 +66,5 @@ public:
 private:
 	FHitResult m_HitResult;
 	bool m_LineTraceOnOff;
-	bool m_bIsHit; //射线是否发生碰撞
+	bool m_bIsHit; //是否发生碰撞
 };

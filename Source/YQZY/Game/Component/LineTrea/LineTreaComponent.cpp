@@ -77,7 +77,6 @@ void ULineTreaComponent::OnCloseLineTrea()
 	m_LineTraceOnOff = false;
 }
 
-//射线检测
 void ULineTreaComponent::CreateLineTreaSingleByCamera()
 {
 	m_HitResult.Reset();
@@ -141,7 +140,6 @@ FHitResult ULineTreaComponent::CreateLineTreaSingleByChannel(const AActor* Ignor
 
 	m_bIsHit = false;
 
-	//参数
 	static FCollisionQueryParams CollisonQueryParams(TEXT("QueryParams"), true, NULL);
 	CollisonQueryParams.bTraceComplex = true;
 	CollisonQueryParams.bReturnPhysicalMaterial = false;
@@ -163,7 +161,6 @@ TArray<struct FHitResult> ULineTreaComponent::CreateLineTreaMultiByChannel(const
 	static TArray<struct FHitResult> HitResult;
 	HitResult.Reset();
 
-	//参数
 	static FCollisionQueryParams CollisonQueryParams(TEXT("QueryParams"), true, NULL);
 	CollisonQueryParams.bTraceComplex = true;
 	CollisonQueryParams.bReturnPhysicalMaterial = false;
