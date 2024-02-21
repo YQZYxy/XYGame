@@ -49,8 +49,9 @@ class YQZY_API ULogicConfigSubsystem  : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 public:
-	ULogicConfigSubsystem();//在构造里面添加 NEW_CONFIG 对应类型
+	ULogicConfigSubsystem();
 	
+	//在InitObject里面添加 DEF_CONFIG 对应 NEW_CONFIG类型
 	DEF_CONFIG(UWeaponConfig);
 	DEF_CONFIG(UTaskConfig);
 
