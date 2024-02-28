@@ -22,7 +22,7 @@ if (!DataTable)\
 	err += "  ";\
 	err += FString::FromInt(__LINE__);\
 	err += "  ";\
-	err += file_name;\
+	err += CONFIG_FILE_NAME(file_name);\
 	return false;\
 }\
 FString str_name;\
