@@ -11,7 +11,8 @@ public class YQZY : ModuleRules
         PublicIncludePaths.AddRange(
 		new string[] {
                 "YQZY",
-                "YQZY/Game"
+                "YQZY/Game",
+                "proto"
             }
         );
 
@@ -38,7 +39,8 @@ public class YQZY : ModuleRules
                 "Niagara",
                 "AsyncMixin",
                 "ControlFlows",
-                "PropertyPath"
+                "PropertyPath",
+                "UEProtobuf"
             }
         );
 

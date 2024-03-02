@@ -1,0 +1,7 @@
+﻿
+
+message P_RoleData {
+	optional uint32 role_id 		= 1;	// 
+	optional string role_name 		= 2;	//
+	
+}
