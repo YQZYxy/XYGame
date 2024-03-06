@@ -24,6 +24,8 @@ void UTcpSocketSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 	m_Socket = nullptr;
+
+	this->ConnectToTCPServer("192.168.3.101", 3724);
 }
  
 void UTcpSocketSubsystem::Deinitialize()
