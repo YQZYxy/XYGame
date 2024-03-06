@@ -3,8 +3,6 @@
 #include "Character/YQZYCharacter.h"
 #include "Game/Struct/TaskData.h"
 
-#include "proto/p_role.pb.h"
-
 #include UE_INLINE_GENERATED_CPP_BY_NAME(EventHandlerSubsystem)
 
 
@@ -17,8 +15,6 @@ bool UEventHandlerSubsystem::ShouldCreateSubsystem(UObject* Outer) const
 void UEventHandlerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-
-    P_RoleData root;
 }
  
 void UEventHandlerSubsystem::Deinitialize()

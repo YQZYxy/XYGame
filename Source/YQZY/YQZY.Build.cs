@@ -40,8 +40,12 @@ public class YQZY : ModuleRules
                 "AsyncMixin",
                 "ControlFlows",
                 "PropertyPath",
+
                 "UEProtobuf",
-                "WebSockets"
+                "Networking",
+                "Sockets",
+                "Json",
+                "JsonUtilities"
             }
         );
 

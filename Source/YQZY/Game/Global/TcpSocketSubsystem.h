@@ -1,10 +1,9 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
+#include "GameFramework/Actor.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "TcpSocketSubsystem.generated.h"
-
-class AYQZYCharacter;
 
 UCLASS(Config = Game)
 class YQZY_API UTcpSocketSubsystem : public UGameInstanceSubsystem
@@ -15,14 +14,42 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection);
 	virtual void Deinitialize();
 
-public:
-    void OnTest();
-
-
-
 
 public:
+	// TcpSocket
+	UFUNCTION(BlueprintCallable, Category = "TcpSocketSubsystem")
+	 bool ConnectToTCPServer(const FString& IP, int32 Port = 8888);
+
+	UFUNCTION(BlueprintCallable, Category = "TcpSocketSubsystem")
+	 bool SendToServer(TArray<uint8> SendData);
+
+	UFUNCTION(BlueprintCallable, Category = "TcpSocketSubsystem")
+	 bool DisConnectToServer();
+
+	UFUNCTION(BlueprintCallable, Category = "TcpSocketSubsystem")
+	 TArray<uint8> ReceiveFromTCPServer();
+
+
+	UFUNCTION(BlueprintCallable, Category = "TcpSocketSubsystem")
+	static void StringToBytes(FString InString, bool& OutBool, TArray<uint8>& OutBytesArray);
+
+	UFUNCTION(BlueprintCallable, Category = "TcpSocketSubsystem")
+	static void DataTypeToJSON(int32 Int, bool Inbool, FString String, FVector Vector, TArray<int32> Array, bool& OutBool, TArray<uint8>& OutBytesArray);
+
+	UFUNCTION(BlueprintCallable, Category = "TcpSocketSubsystem")
+	static void BytesToString(TArray<uint8> InBytesArray, FString& OutString);
+
+
+public:	
+	//// WebSocket
+	//void OnConnected();
+	//void OnConnectionError(const FString& Error);
+	//void OnClosed(int32 StatusCode, const FString& Reason, bool bWasClean);
+	//void OnMessage(const FString& Message);
+	//void OnMessageSent(const FString& MessageString);
+	//void OnRawMessage();
+
 
 private:
-
+	class FSocket* m_Socket;
 };

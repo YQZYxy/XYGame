@@ -159,13 +159,13 @@ bool ULogicConfigSubsystem::LoadCfg(TMap<FName, ULogicConfig*>& class_config_map
 		auto it = class_config_map.Find(table_data.Key);
 		if (nullptr == it)
 		{
-			YQZYError("%s %d Init Cfg %s ", __FUNCTION__, __LINE__, *table_data.Value.ToString());
+			YQZYError("Init Cfg %s ", *table_data.Value.ToString());
 			return false;
 		}
 		ULogicConfig* cfg = (ULogicConfig*)*it;
 		if (nullptr == cfg)
 		{
-			YQZYError("%s %d Init Cfg %s ", __FUNCTION__, __LINE__, *table_data.Value.ToString());
+			YQZYError("Init Cfg %s ", *table_data.Value.ToString());
 			return false;
 		}
 		FString error;
