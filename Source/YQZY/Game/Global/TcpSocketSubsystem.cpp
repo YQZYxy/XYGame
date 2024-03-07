@@ -26,6 +26,25 @@ void UTcpSocketSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	m_Socket = nullptr;
 
 	this->ConnectToServer("192.168.3.101", 3724);
+
+	Role_Data RoleData;
+	RoleData.set_role_id(9527);
+	RoleData.set_role_name("桂林仔");
+
+	// //序列化：
+	// bool SerializeToOstream(ostream* output) const;
+	// bool SerializeToArray(void *data, int size) const;
+	// bool SerializeToString(string* output) const;
+	
+	// //反序列化：
+	// bool ParseFromIstream(istream* input);
+	// bool ParseFromArray(const void* data, int size);
+	// bool ParseFromString(const string& data);
+
+	std::string msg_str;
+	RoleData.SerializeToString(msg_str);
+
+	this->SendToServer(TArray::StringToBytes(msg_str));
 }
  
 void UTcpSocketSubsystem::Deinitialize()
@@ -110,15 +129,15 @@ bool UTcpSocketSubsystem::SendToServer(TArray<uint8> SendData)
 		return false;
 	}
 
-	static TArray<uint8> msg;
-	uint32 msg_length = SendData.Num();
+	static TArray<uint8> msg; msg.Empty();
+	static int32 msg_length = SendData.Num();
 	for(int i= 0; i < 4; ++i)
 	{
-		msg.Insert((uint8)*((uint8 *)&msg_length + i), i);
+		msg.Append(stitic_cast<uint8>(*((uint8 *)&msg_length + i)));
 	}
 	msg.Append(SendData, SendData.Num());
 
-	// 发送数据部分
+
 	int32 SentBytes = 0;
 	bool bSuccess = m_Socket->Send(SendData.GetData(), SendData.Num(), SentBytes);
 
@@ -146,29 +165,48 @@ bool UTcpSocketSubsystem::DisConnectToServer()
 
 TArray<uint8> UTcpSocketSubsystem::ReceiveToServer()
 {
-	TArray<uint8> Bytes;
+	static TArray<uint8> msg_buf;
 
 	if (m_Socket)
 	{
 		uint32 Size;
 		while (m_Socket->HasPendingData(Size))
 		{
-			Bytes.SetNumUninitialized(FMath::Min(Size, 65507u));
+			// msg_buf.SetNumUninitialized(FMath::Min(Size, 65535u));
 
-			int32 ReadBytes = 0;
-			// 读取数据到字节流中
-			m_Socket->Recv(Bytes.GetData(), Bytes.Num(), ReadBytes);
+			// int32 ReadMsgLeft = 0;
+			// m_Socket->Recv(msg_buf.GetData(), msg_buf.Num() , ReadMsgLeft);
+			// msg_buf.SetNum(ReadMsgLeft);
+			
+			int32 TempLeft = 0;
+			int32 ReadMsgLeft = 0;
+			m_Socket->Recv(&ReadMsgLeft, 4 , TempLeft);
+			if(4 > TempLeft || 4 > ReadMsgLeft)
+			{
+				return TArray<uint8>();
+			}
 
-			// 将实际读取的部分截取出来
-			Bytes.SetNum(ReadBytes);
+			//nLeft = static_cast<int32>(int32(msg_buf[3]) << 24 | int32(msg_buf[2]) << 16 | int32(msg_buf[1]) << 8 | int32(msg_buf[0]));
+			int32 nLeft = ReadMsgLeft;
+			int32 nread = 0;
+			int32 index = 0;
+			
+			while (nLeft > 0)
+			{
+				m_Socket->Recv(msg_buf.GetData() + index, nLeft , nread);
+				if(0 >= nread)
+				{
+					return TArray<uint8>();
+				}
+				
+				index += nread;
+				nLeft -= nread;
+			}
 
-			// 如果需要等待接收完整数据再返回，可以设置一个条件，比如接收到特定结束标志
-			// 如果已经接收到完整数据，可以直接返回
-			return Bytes;
+			return msg_buf;
 		}
 	}
 
-	// 如果没有接收到数据，返回空字节流
 	return TArray<uint8>();
 }
 

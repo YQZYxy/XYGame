@@ -1,6 +1,6 @@
 ﻿
 
-message PB_RoleData {
+message Role_Data {
 	optional uint32 role_id 		= 1;	// 
 	optional string role_name 		= 2;	//
 	
