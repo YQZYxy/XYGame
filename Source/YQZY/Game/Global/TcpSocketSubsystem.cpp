@@ -9,7 +9,7 @@
 #include "Common/TcpSocketBuilder.h"
 //end
 
-#include "proto/p_role.pb.h"
+#include "proto/pb_role.pb.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(TcpSocketSubsystem)
 
