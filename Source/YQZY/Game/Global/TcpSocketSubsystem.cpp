@@ -25,7 +25,7 @@ void UTcpSocketSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	Super::Initialize(Collection);
 	m_Socket = nullptr;
 
-	this->ConnectToTCPServer("192.168.3.101", 3724);
+	this->ConnectToServer("192.168.3.101", 3724);
 }
  
 void UTcpSocketSubsystem::Deinitialize()
@@ -57,7 +57,7 @@ void UTcpSocketSubsystem::Deinitialize()
 //}
 
 
-bool UTcpSocketSubsystem::ConnectToTCPServer(const FString& IP, int32 Port)
+bool UTcpSocketSubsystem::ConnectToServer(const FString& IP, int32 Port)
 {
 	if (m_Socket)
 	{
@@ -136,7 +136,7 @@ bool UTcpSocketSubsystem::DisConnectToServer()
 	return false;
 }
 
-TArray<uint8> UTcpSocketSubsystem::ReceiveFromServer()
+TArray<uint8> UTcpSocketSubsystem::ReceiveToServer()
 {
 	TArray<uint8> Bytes;
 

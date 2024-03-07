@@ -18,7 +18,7 @@ public:
 public:
 	// TcpSocket
 	UFUNCTION(BlueprintCallable, Category = "TcpSocketSubsystem")
-	 bool ConnectToTCPServer(const FString& IP, int32 Port = 8888);
+	 bool ConnectToServer(const FString& IP, int32 Port = 8888);
 
 	UFUNCTION(BlueprintCallable, Category = "TcpSocketSubsystem")
 	 bool SendToServer(TArray<uint8> SendData);
@@ -27,7 +27,7 @@ public:
 	 bool DisConnectToServer();
 
 	UFUNCTION(BlueprintCallable, Category = "TcpSocketSubsystem")
-	 TArray<uint8> ReceiveFromServer();
+	 TArray<uint8> ReceiveToServer();
 
 
 	UFUNCTION(BlueprintCallable, Category = "TcpSocketSubsystem")
