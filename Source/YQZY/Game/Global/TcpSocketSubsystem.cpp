@@ -41,24 +41,18 @@ void UTcpSocketSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	RoleData.set_role_id(9527);
 	RoleData.set_role_name("桂林仔");
 
+	static int32 msg_type = 100;
+
+	char str[1024];
+	memset(str, 0, sizeof(str));
+	memcpy(str, &msg_type, 4);
+	RoleData.SerializeToArray(str + 4, (int)RoleData.ByteSizeLong());
 
 
-	std::string msg_str;
-	RoleData.SerializeToString(&msg_str);
-
-	FString HappyString(msg_str.c_str());
-
-	static TArray<uint8> temp_msg;
-	UTcpSocketSubsystem::StringToBytes(HappyString, temp_msg);
+	FString HappyString = FString(UTF8_TO_TCHAR(str));
 
 	static TArray<uint8> msg; msg.Empty();
-	static int32 msg_type = 100;
-	for (int i = 0; i < 4; ++i)
-	{
-		msg.Emplace(*((uint8*)&msg_type + i));
-	}
-
-	msg.Append(temp_msg);
+	UTcpSocketSubsystem::StringToBytes(HappyString, msg);
 
 	this->SendToServer(msg);
 }
