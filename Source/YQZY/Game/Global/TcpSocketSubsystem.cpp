@@ -104,11 +104,19 @@ bool UTcpSocketSubsystem::ConnectToServer(const FString& IP, int32 Port)
 
 bool UTcpSocketSubsystem::SendToServer(TArray<uint8> SendData)
 {
-	if(nullptr == Addr)
+	if(nullptr == m_Socket)
 	{
 		YQZYError("m_Socket is not connected!");
 		return false;
 	}
+
+	static TArray<uint8> msg;
+	uint32 msg_length = SendData.Num();
+	for(int i= 0; i < 4; ++i)
+	{
+		msg.Insert((uint8)*((uint8 *)&msg_length + i), i);
+	}
+	msg.Append(SendData, SendData.Num());
 
 	// 发送数据部分
 	int32 SentBytes = 0;
