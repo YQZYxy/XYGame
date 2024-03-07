@@ -67,13 +67,20 @@ bool UTcpSocketSubsystem::ConnectToTCPServer(const FString& IP, int32 Port)
 	}
 
 	TSharedPtr<FInternetAddr> Addr = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateInternetAddr();
+	if(nullptr == Addr)
+	{
+		YQZYError("InValid CreateInternetAddr");
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("InValid CreateInternetAddr"));
+		return false;
+	}
+
 	bool bIsValid;
 	Addr->SetIp(*IP, bIsValid);
 	Addr->SetPort(Port);
 
 	if (!bIsValid)
 	{
-		YQZYError("",TEXT("InValid IP Address"));
+		YQZYError("InValid IP Address");
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("InValid IP Address"));
 		return false;
 	}
@@ -82,12 +89,14 @@ bool UTcpSocketSubsystem::ConnectToTCPServer(const FString& IP, int32 Port)
 	bool bConnected = m_Socket->Connect(*Addr);
 	if (!bConnected)
 	{
-		YQZYError("", TEXT("Failed Connect To Server"));
+		YQZYError("Failed Connect To Server");
 		GEngine->AddOnScreenDebugMessage(-1, 5.0, FColor::Green, TEXT("Failed Connect To Server"));
 		return false;
 	}
-	YQZYDebug("", TEXT("Success Connect To Server"));
-	GEngine->AddOnScreenDebugMessage(-1, 5.0, FColor::Green, TEXT("Success Connect To Server"));
+	
+	YQZYDebug("Success Connect To Server");
+	//GEngine->AddOnScreenDebugMessage(-1, 5.0, FColor::Green, TEXT("Success Connect To Server"));
+	GE_DEBUG( 5.0, FColor::Green, "Success Connect To Server");
 
 	return true;
 
@@ -95,9 +104,9 @@ bool UTcpSocketSubsystem::ConnectToTCPServer(const FString& IP, int32 Port)
 
 bool UTcpSocketSubsystem::SendToServer(TArray<uint8> SendData)
 {
-	if (!m_Socket)
+	if(nullptr == Addr)
 	{
-		YQZYError("", TEXT("m_Socket is not connected!"));
+		YQZYError("m_Socket is not connected!");
 		return false;
 	}
 
@@ -107,11 +116,11 @@ bool UTcpSocketSubsystem::SendToServer(TArray<uint8> SendData)
 
 	if (!bSuccess || SentBytes != SendData.Num())
 	{
-		YQZYError("", TEXT("Failed to send data!"));
+		YQZYError("Failed to send data!");
 		return false;
 	}
 	GEngine->AddOnScreenDebugMessage(-1, 5.0, FColor::Green, TEXT("Success to send data!"));
-	YQZYDebug("", TEXT("Success to send data!"));
+	YQZYDebug("Success to send data!");
 	return true;
 }
 
@@ -127,7 +136,7 @@ bool UTcpSocketSubsystem::DisConnectToServer()
 	return false;
 }
 
-TArray<uint8> UTcpSocketSubsystem::ReceiveFromTCPServer()
+TArray<uint8> UTcpSocketSubsystem::ReceiveFromServer()
 {
 	TArray<uint8> Bytes;
 
@@ -156,7 +165,7 @@ TArray<uint8> UTcpSocketSubsystem::ReceiveFromTCPServer()
 }
 
 
-void UTcpSocketSubsystem::StringToBytes(FString InString, bool& OutBool, TArray<uint8>& OutBytesArray)
+bool UTcpSocketSubsystem::StringToBytes(FString InString, TArray<uint8>& OutBytesArray)
 {
 	OutBytesArray.Empty();
 
@@ -167,21 +176,14 @@ void UTcpSocketSubsystem::StringToBytes(FString InString, bool& OutBool, TArray<
 		if (NumBytes > 0)
 		{
 			OutBytesArray.Append((uint8*)Converter.Get(), NumBytes);
-			OutBool = true;
-		}
-		else
-		{
-			OutBool = false;
+			return true;
 		}
 	}
-	else
-	{
-		OutBool = false;
-	}
+
+	return false;
 }
 
-void UTcpSocketSubsystem::DataTypeToJSON(int32 Int, bool Inbool, FString String, FVector Vector, TArray<int32> Array,
-	bool& OutBool, TArray<uint8>& OutBytesArray)
+bool UTcpSocketSubsystem::DataTypeToJSON(int32 Int, bool Inbool, FString String, FVector Vector, TArray<int32> Array, TArray<uint8>& OutBytesArray)
 {
 	OutBytesArray.Empty();
 
@@ -218,17 +220,11 @@ void UTcpSocketSubsystem::DataTypeToJSON(int32 Int, bool Inbool, FString String,
 		if (NumBytes > 0)
 		{
 			OutBytesArray.Append((uint8*)Converter.Get(), NumBytes);
-			OutBool = true;
-		}
-		else
-		{
-			OutBool = false;
+			return true;
 		}
 	}
-	else
-	{
-		OutBool = false;
-	}
+
+	return false;
 }
 
 

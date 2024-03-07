@@ -11,3 +11,10 @@ YQZY_API DECLARE_LOG_CATEGORY_EXTERN(YQZYLog, Log, All);
 #define YQZYFatal(format, ...) UE_LOG(YQZYLog, Fatal,  "%s::%d" TEXT(format), __FUNCTION__, __LINE__, ##__VA_ARGS__)
 
 YQZY_API FString GetClientServerContextString(UObject* ContextOYQZYLogbject = nullptr);
+
+
+#define GE_DEBUG_ID(id,time,color, info)\
+GEngine->AddOnScreenDebugMessage(id, time, color, TEXT(#info));
+
+#define GE_DEBUG(time,color, info)\
+GE_DEBUG_ID(-1, time,color,info)
