@@ -34,7 +34,7 @@ void UTcpSocketSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	Super::Initialize(Collection);
 	m_Socket = nullptr;
 
-	this->ConnectToServer("192.168.3.101", 3724);
+	this->ConnectToServer("192.168.3.102", 3723);
 
 	Role_Data RoleData ;
 	
@@ -46,7 +46,7 @@ void UTcpSocketSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	std::string msg_str;
 	RoleData.SerializeToString(&msg_str);
 
-	FString HappyString(UTF8_TO_TCHAR(msg_str.c_str()));
+	FString HappyString(msg_str.c_str());
 
 	static TArray<uint8> temp_msg;
 	UTcpSocketSubsystem::StringToBytes(HappyString, temp_msg);
