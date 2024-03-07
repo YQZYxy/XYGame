@@ -9,7 +9,7 @@
 #include "Common/TcpSocketBuilder.h"
 //end
 
-#include "proto/role_data.pb.h"
+#include "Protobuf/role_data.pb.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(TcpSocketSubsystem)
 
@@ -36,14 +36,15 @@ void UTcpSocketSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
 	this->ConnectToServer("192.168.3.101", 3724);
 
-	Role_Data RoleData;
-	//RoleData.set_role_id(9527);
-	//RoleData.set_role_name("桂林仔");
+	Role_Data RoleData ;
+	
+	RoleData.set_role_id(9527);
+	RoleData.set_role_name("桂林仔");
 
 
 
 	std::string msg_str;
-	//RoleData.SerializeToString(&msg_str);
+	RoleData.SerializeToString(&msg_str);
 
 	FString HappyString(UTF8_TO_TCHAR(msg_str.c_str()));
 

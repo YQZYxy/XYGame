@@ -12,7 +12,7 @@ public class YQZY : ModuleRules
 		new string[] {
                 "YQZY",
                 "YQZY/Game",
-                "proto"
+                "YQZY/Protobuf"
             }
         );
 
