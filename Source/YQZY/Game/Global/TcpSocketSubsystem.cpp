@@ -9,10 +9,19 @@
 #include "Common/TcpSocketBuilder.h"
 //end
 
-#include "proto/pb_role.pb.h"
+#include "proto/role_data.pb.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(TcpSocketSubsystem)
 
+	// //序列化：
+	// bool SerializeToOstream(ostream* output) const;
+	// bool SerializeToArray(void *data, int size) const;
+	// bool SerializeToString(string* output) const;
+
+	// //反序列化：
+	// bool ParseFromIstream(istream* input);
+	// bool ParseFromArray(const void* data, int size);
+	// bool ParseFromString(const string& data);
 
 bool UTcpSocketSubsystem::ShouldCreateSubsystem(UObject* Outer) const
 {
@@ -28,23 +37,29 @@ void UTcpSocketSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	this->ConnectToServer("192.168.3.101", 3724);
 
 	Role_Data RoleData;
-	RoleData.set_role_id(9527);
-	RoleData.set_role_name("桂林仔");
+	//RoleData.set_role_id(9527);
+	//RoleData.set_role_name("桂林仔");
 
-	// //序列化：
-	// bool SerializeToOstream(ostream* output) const;
-	// bool SerializeToArray(void *data, int size) const;
-	// bool SerializeToString(string* output) const;
-	
-	// //反序列化：
-	// bool ParseFromIstream(istream* input);
-	// bool ParseFromArray(const void* data, int size);
-	// bool ParseFromString(const string& data);
+
 
 	std::string msg_str;
-	RoleData.SerializeToString(msg_str);
+	//RoleData.SerializeToString(&msg_str);
 
-	this->SendToServer(TArray::StringToBytes(msg_str));
+	FString HappyString(UTF8_TO_TCHAR(msg_str.c_str()));
+
+	static TArray<uint8> temp_msg;
+	UTcpSocketSubsystem::StringToBytes(HappyString, temp_msg);
+
+	static TArray<uint8> msg; msg.Empty();
+	static int32 msg_type = 100;
+	for (int i = 0; i < 4; ++i)
+	{
+		msg.Emplace(*((uint8*)&msg_type + i));
+	}
+
+	msg.Append(temp_msg);
+
+	this->SendToServer(msg);
 }
  
 void UTcpSocketSubsystem::Deinitialize()
@@ -121,7 +136,7 @@ bool UTcpSocketSubsystem::ConnectToServer(const FString& IP, int32 Port)
 
 }
 
-bool UTcpSocketSubsystem::SendToServer(TArray<uint8> SendData)
+bool UTcpSocketSubsystem::SendToServer(TArray<uint8> SendData)  
 {
 	if(nullptr == m_Socket)
 	{
@@ -133,9 +148,9 @@ bool UTcpSocketSubsystem::SendToServer(TArray<uint8> SendData)
 	static int32 msg_length = SendData.Num();
 	for(int i= 0; i < 4; ++i)
 	{
-		msg.Append(stitic_cast<uint8>(*((uint8 *)&msg_length + i)));
+		msg.Emplace(*((uint8 *)&msg_length + i));
 	}
-	msg.Append(SendData, SendData.Num());
+	msg.Append(SendData);
 
 
 	int32 SentBytes = 0;
@@ -179,9 +194,23 @@ TArray<uint8> UTcpSocketSubsystem::ReceiveToServer()
 			// msg_buf.SetNum(ReadMsgLeft);
 			
 			int32 TempLeft = 0;
+			static TArray<uint8> temp_length;
 			int32 ReadMsgLeft = 0;
-			m_Socket->Recv(&ReadMsgLeft, 4 , TempLeft);
-			if(4 > TempLeft || 4 > ReadMsgLeft)
+			m_Socket->Recv(temp_length.GetData(), 4 , TempLeft);
+
+			if(4 > TempLeft)
+			{
+				return TArray<uint8>();
+			}
+
+			{
+				*((uint8*)&ReadMsgLeft + 0) = temp_length[0];
+				*((uint8*)&ReadMsgLeft + 1) = temp_length[1];
+				*((uint8*)&ReadMsgLeft + 2) = temp_length[2];
+				*((uint8*)&ReadMsgLeft + 3) = temp_length[3];
+			}
+
+			if ( 4 > ReadMsgLeft)
 			{
 				return TArray<uint8>();
 			}

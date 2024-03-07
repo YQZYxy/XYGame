@@ -31,7 +31,7 @@ public:
 
 
 	UFUNCTION(BlueprintCallable, Category = "TcpSocketSubsystem")
-	static bool StringToBytes(FString InString, bool& OutBool, TArray<uint8>& OutBytesArray);
+	static bool StringToBytes(FString InString, TArray<uint8>& OutBytesArray);
 
 	UFUNCTION(BlueprintCallable, Category = "TcpSocketSubsystem")
 	static bool DataTypeToJSON(int32 Int, bool Inbool, FString String, FVector Vector, TArray<int32> Array, TArray<uint8>& OutBytesArray);
