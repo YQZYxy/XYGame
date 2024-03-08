@@ -42,17 +42,17 @@ void UTcpSocketSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	static int32 msg_type = 100;
 
 	static TArray<uint8> Msg;
-	Msg.SetNumUninitialized(FMath::Min(RoleData.GetCachedSize() + 4, 65535u));
+	Msg.SetNumUninitialized(FMath::Min(RoleData.GetCachedSize() + 4, 65535));
 
 	//memset(Msg.GetData(), 0, Msg.Num());
 	memcpy(Msg.GetData(), &msg_type, 4);
 	RoleData.SerializeToArray(Msg.GetData() + 4, Msg.Num() - 4);
 
-	FString HappyString = FString(UTF8_TO_TCHAR(str));
+	FString HappyString = FString(UTF8_TO_TCHAR(Msg.GetData()));
 
 
 
-	this->SendToServer(msg);
+	this->SendToServer(Msg);
 }
  
 void UTcpSocketSubsystem::Deinitialize()
@@ -147,7 +147,7 @@ bool UTcpSocketSubsystem::SendToServer(const TArray<uint8>& SendData)
 	int32 SentBytes = 0;
 	bool bSuccess = m_Socket->Send(MsgBuf.GetData(), MsgBuf.Num(), SentBytes);
 
-	if (!bSuccess || SentBytes != msg.Num())
+	if (!bSuccess || SentBytes != MsgBuf.Num())
 	{
 		YQZYError("Failed to send data!");
 		return false;
