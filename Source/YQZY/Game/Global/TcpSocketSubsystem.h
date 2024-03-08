@@ -39,7 +39,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "TcpSocketSubsystem")
 	static void BytesToString(TArray<uint8> InBytesArray, FString& OutString);
 
-
+	int32 Tcphtonl(int32 x) {
+		union {
+			int32 result;
+			int8 result_array[4];
+		};
+		result_array[0] = static_cast<uint8>(x >> 24);
+		result_array[1] = static_cast<uint8>((x >> 16) & 0xFF);
+		result_array[2] = static_cast<uint8>((x >> 8) & 0xFF);
+		result_array[3] = static_cast<uint8>(x & 0xFF);
+		return result;
+	}
 public:	
 	//// WebSocket
 	//void OnConnected();

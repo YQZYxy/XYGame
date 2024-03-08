@@ -32,25 +32,21 @@ void UTcpSocketSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	Super::Initialize(Collection);
 	m_Socket = nullptr;
 
-	this->ConnectToServer("192.168.3.102", 3723);
+	this->ConnectToServer("192.168.3.101", 3723);
 
 	Role_Data RoleData ;
 	
 	RoleData.set_role_id(9527);
-	RoleData.set_role_name("");
+	RoleData.set_role_name("桂林仔");
 
 	static int32 msg_type = 100;
 
 	static TArray<uint8> Msg;
-	Msg.SetNumUninitialized(FMath::Min(RoleData.GetCachedSize() + 4, 65535));
+	Msg.SetNumUninitialized(FMath::Min(RoleData.ByteSize() + 4, 65535));
 
 	//memset(Msg.GetData(), 0, Msg.Num());
 	memcpy(Msg.GetData(), &msg_type, 4);
 	RoleData.SerializeToArray(Msg.GetData() + 4, Msg.Num() - 4);
-
-	FString HappyString = FString(UTF8_TO_TCHAR(Msg.GetData()));
-
-
 
 	this->SendToServer(Msg);
 }
@@ -137,11 +133,14 @@ bool UTcpSocketSubsystem::SendToServer(const TArray<uint8>& SendData)
 		return false;
 	}
 
-	static TArray<uint8> MsgBuf; MsgBuf.Empty();
+	static TArray<uint8> MsgBuf;
+	MsgBuf.SetNumUninitialized(FMath::Min(SendData.Num() + 4, 65535));
 
 	int SendDataLength = SendData.Num();
+
+	int HtonlSendDataLength = Tcphtonl(SendDataLength);
 	memset(MsgBuf.GetData(), 0, SendDataLength);
-	memcpy(MsgBuf.GetData(), &SendDataLength, 4);
+	memcpy(MsgBuf.GetData(), &HtonlSendDataLength, 4);
 	memcpy(MsgBuf.GetData() + 4,SendData.GetData(), SendDataLength);
 
 	int32 SentBytes = 0;
