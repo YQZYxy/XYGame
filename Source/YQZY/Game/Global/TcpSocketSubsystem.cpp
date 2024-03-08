@@ -13,12 +13,10 @@
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(TcpSocketSubsystem)
 
-	// //序列化：
 	// bool SerializeToOstream(ostream* output) const;
 	// bool SerializeToArray(void *data, int size) const;
 	// bool SerializeToString(string* output) const;
 
-	// //反序列化：
 	// bool ParseFromIstream(istream* input);
 	// bool ParseFromArray(const void* data, int size);
 	// bool ParseFromString(const string& data);
@@ -46,8 +44,7 @@ void UTcpSocketSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	char str[1024];
 	memset(str, 0, sizeof(str));
 	memcpy(str, &msg_type, 4);
-	RoleData.SerializeToArray(str + 4, (int)RoleData.ByteSizeLong());
-
+	RoleData.SerializeToArray(str + 4, sizeof(str) - 4);
 
 	FString HappyString = FString(UTF8_TO_TCHAR(str));
 
@@ -131,7 +128,7 @@ bool UTcpSocketSubsystem::ConnectToServer(const FString& IP, int32 Port)
 
 }
 
-bool UTcpSocketSubsystem::SendToServer(TArray<uint8> SendData)  
+bool UTcpSocketSubsystem::SendToServer(const std::string& SendData)  
 {
 	if(nullptr == m_Socket)
 	{
@@ -139,19 +136,19 @@ bool UTcpSocketSubsystem::SendToServer(TArray<uint8> SendData)
 		return false;
 	}
 
-	static TArray<uint8> msg; msg.Empty();
-	static int32 msg_length = SendData.Num();
-	for(int i= 0; i < 4; ++i)
-	{
-		msg.Emplace(*((uint8 *)&msg_length + i));
-	}
-	msg.Append(SendData);
+	static char MsgBuf[65536];
 
+	int SendDataSize = SendData.size();
+	memset(MsgBuf, 0, SendDataSize);
+	memcpy(MsgBuf, &SendDataSize, 4);
+	memcpy(MsgBuf + 4,SendData.c_str(), SendDataSize);
+
+	static TArray<uint8> msg; msg.Empty();
 
 	int32 SentBytes = 0;
-	bool bSuccess = m_Socket->Send(SendData.GetData(), SendData.Num(), SentBytes);
+	bool bSuccess = m_Socket->Send(msg.GetData(), msg.Num(), SentBytes);
 
-	if (!bSuccess || SentBytes != SendData.Num())
+	if (!bSuccess || SentBytes != msg.Num())
 	{
 		YQZYError("Failed to send data!");
 		return false;
