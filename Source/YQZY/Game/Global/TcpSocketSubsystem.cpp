@@ -37,19 +37,20 @@ void UTcpSocketSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	Role_Data RoleData ;
 	
 	RoleData.set_role_id(9527);
-	RoleData.set_role_name("桂林仔");
+	RoleData.set_role_name("");
 
 	static int32 msg_type = 100;
 
-	char str[1024];
-	memset(str, 0, sizeof(str));
-	memcpy(str, &msg_type, 4);
-	RoleData.SerializeToArray(str + 4, sizeof(str) - 4);
+	static TArray<uint8> Msg;
+	Msg.SetNumUninitialized(FMath::Min(RoleData.GetCachedSize() + 4, 65535u));
+
+	//memset(Msg.GetData(), 0, Msg.Num());
+	memcpy(Msg.GetData(), &msg_type, 4);
+	RoleData.SerializeToArray(Msg.GetData() + 4, Msg.Num() - 4);
 
 	FString HappyString = FString(UTF8_TO_TCHAR(str));
 
-	static TArray<uint8> msg; msg.Empty();
-	UTcpSocketSubsystem::StringToBytes(HappyString, msg);
+
 
 	this->SendToServer(msg);
 }
@@ -128,7 +129,7 @@ bool UTcpSocketSubsystem::ConnectToServer(const FString& IP, int32 Port)
 
 }
 
-bool UTcpSocketSubsystem::SendToServer(const std::string& SendData)  
+bool UTcpSocketSubsystem::SendToServer(const TArray<uint8>& SendData)  
 {
 	if(nullptr == m_Socket)
 	{
@@ -136,17 +137,15 @@ bool UTcpSocketSubsystem::SendToServer(const std::string& SendData)
 		return false;
 	}
 
-	static char MsgBuf[65536];
+	static TArray<uint8> MsgBuf; MsgBuf.Empty();
 
-	int SendDataSize = SendData.size();
-	memset(MsgBuf, 0, SendDataSize);
-	memcpy(MsgBuf, &SendDataSize, 4);
-	memcpy(MsgBuf + 4,SendData.c_str(), SendDataSize);
-
-	static TArray<uint8> msg; msg.Empty();
+	int SendDataLength = SendData.Num();
+	memset(MsgBuf.GetData(), 0, SendDataLength);
+	memcpy(MsgBuf.GetData(), &SendDataLength, 4);
+	memcpy(MsgBuf.GetData() + 4,SendData.GetData(), SendDataLength);
 
 	int32 SentBytes = 0;
-	bool bSuccess = m_Socket->Send(msg.GetData(), msg.Num(), SentBytes);
+	bool bSuccess = m_Socket->Send(MsgBuf.GetData(), MsgBuf.Num(), SentBytes);
 
 	if (!bSuccess || SentBytes != msg.Num())
 	{
