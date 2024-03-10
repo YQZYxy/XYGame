@@ -5,10 +5,21 @@
 class UObject;
 
 YQZY_API DECLARE_LOG_CATEGORY_EXTERN(YQZYLog, Log, All);
+
+
+#if PLATFORM_WIDECHAR_IS_CHAR16
+#define YQZYDebug(format, ...) UE_LOG(YQZYLog, Log, "[%s::<%d>] " TEXT(format), __FUNCTION__, __LINE__, ##__VA_ARGS__)
+#define YQZYWarning(format, ...) UE_LOG(YQZYLog, Warning, "[%s::<%d>] " TEXT(format), __FUNCTION__, __LINE__, ##__VA_ARGS__)
+#define YQZYError(format, ...) UE_LOG(YQZYLog, Error, "[%s::<%d>] " TEXT(format), __FUNCTION__, __LINE__, ##__VA_ARGS__)
+#define YQZYFatal(format, ...) UE_LOG(YQZYLog, Fatal, "[%s::<%d>] " TEXT(format), __FUNCTION__, __LINE__, ##__VA_ARGS__)
+#else
 #define YQZYDebug(format, ...) UE_LOG(YQZYLog, Log, "[%s::<%d>] " TEXT(format), TEXT(__FUNCTION__), __LINE__, ##__VA_ARGS__)
 #define YQZYWarning(format, ...) UE_LOG(YQZYLog, Warning, "[%s::<%d>] " TEXT(format), TEXT(__FUNCTION__), __LINE__, ##__VA_ARGS__)
 #define YQZYError(format, ...) UE_LOG(YQZYLog, Error, "[%s::<%d>] " TEXT(format), TEXT(__FUNCTION__), __LINE__, ##__VA_ARGS__)
 #define YQZYFatal(format, ...) UE_LOG(YQZYLog, Fatal, "[%s::<%d>] " TEXT(format), TEXT(__FUNCTION__), __LINE__, ##__VA_ARGS__)
+#endif
+
+
 
 YQZY_API FString GetClientServerContextString(UObject* ContextOYQZYLogbject = nullptr);
 

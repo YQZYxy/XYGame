@@ -34,19 +34,19 @@ void UTcpSocketSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
 	this->ConnectToServer("192.168.3.102", 3723);
 
-	Role_Data RoleData ;
-	
+	Role_Data RoleData;
+
 	RoleData.set_role_id(9527);
 	RoleData.set_role_name("桂林仔我打的四大五打的卡哦哦爱打架OA大家哦啊京东");
 
 	int32 msg_type = 100;
 
 	TArray<uint8> Msg;
-	Msg.SetNumUninitialized(FMath::Min(RoleData.ByteSize()+4 , 65535));
+	Msg.SetNumUninitialized(FMath::Min(RoleData.ByteSize() + 4, 65535));
 
 	memset(Msg.GetData(), 0, Msg.Num());
 	memcpy(Msg.GetData(), &msg_type, 4);
-	RoleData.SerializeToArray(Msg.GetData() +4, Msg.Num()-4);
+	RoleData.SerializeToArray(Msg.GetData() + 4, Msg.Num() - 4);
 
 	this->SendToServer(Msg);
 }
