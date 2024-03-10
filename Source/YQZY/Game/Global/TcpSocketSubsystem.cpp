@@ -119,7 +119,7 @@ bool UTcpSocketSubsystem::ConnectToServer(const FString& IP, int32 Port)
 	
 	YQZYDebug("Success Connect To Server");
 	//GEngine->AddOnScreenDebugMessage(-1, 5.0, FColor::Green, TEXT("Success Connect To Server"));
-	GE_DEBUG( 5.0, FColor::Green, "Success Connect To Server");
+	GE_DEBUG( "Success Connect To Server");
 
 	return true;
 
