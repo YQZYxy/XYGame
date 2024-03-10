@@ -37,23 +37,25 @@ void UTcpSocketSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	Role_Data RoleData ;
 	
 	RoleData.set_role_id(9527);
-	RoleData.set_role_name("桂林仔");
+	RoleData.set_role_name("桂林仔我打的四大五打的卡哦哦爱打架OA大家哦啊京东");
 
-	static int32 msg_type = 100;
+	int32 msg_type = 100;
 
-	static TArray<uint8> Msg;
-	Msg.SetNumUninitialized(FMath::Min(RoleData.ByteSize() + 4, 65535));
+	TArray<uint8> Msg;
+	Msg.SetNumUninitialized(FMath::Min(RoleData.ByteSize()+4 , 65535));
 
-	//memset(Msg.GetData(), 0, Msg.Num());
+	memset(Msg.GetData(), 0, Msg.Num());
 	memcpy(Msg.GetData(), &msg_type, 4);
-	RoleData.SerializeToArray(Msg.GetData() + 4, Msg.Num() - 4);
+	RoleData.SerializeToArray(Msg.GetData() +4, Msg.Num()-4);
 
-	this->SendToServer(Msg);
+	this->SendToServer(-1, Msg);
 }
  
 void UTcpSocketSubsystem::Deinitialize()
 {
 	Super::Deinitialize();
+
+	this->DisConnectToServer();
 }
 
 //void UTcpSocketSubsystem::Shutdown()
@@ -119,13 +121,13 @@ bool UTcpSocketSubsystem::ConnectToServer(const FString& IP, int32 Port)
 	
 	YQZYDebug("Success Connect To Server");
 	//GEngine->AddOnScreenDebugMessage(-1, 5.0, FColor::Green, TEXT("Success Connect To Server"));
-	GE_DEBUG( "Success Connect To Server");
+	GE_DEBUG("Success Connect To Server");
 
 	return true;
 
 }
 
-bool UTcpSocketSubsystem::SendToServer(const TArray<uint8>& SendData)  
+bool UTcpSocketSubsystem::SendToServer( int32 msg_type, const TArray<uint8>& SendData)
 {
 	if(nullptr == m_Socket)
 	{
@@ -133,15 +135,33 @@ bool UTcpSocketSubsystem::SendToServer(const TArray<uint8>& SendData)
 		return false;
 	}
 
-	static TArray<uint8> MsgBuf;
-	MsgBuf.SetNumUninitialized(FMath::Min(SendData.Num() + 4, 65535));
+	TArray<uint8> MsgBuf;
 
-	int SendDataLength = SendData.Num();
+	if ( -1 != msg_type)
+	{
+		// 有协议类型
+		MsgBuf.SetNumUninitialized(FMath::Min(SendData.Num() + 8, 65535));
+		
+		int SendDataLength = SendData.Num() + 4;
+		int HtonlSendDataLength = Tcphtonl(SendDataLength);
+		memset(MsgBuf.GetData(), 0, SendDataLength);
 
-	int HtonlSendDataLength = Tcphtonl(SendDataLength);
-	memset(MsgBuf.GetData(), 0, SendDataLength);
-	memcpy(MsgBuf.GetData(), &HtonlSendDataLength, 4);
-	memcpy(MsgBuf.GetData() + 4,SendData.GetData(), SendDataLength);
+		memcpy(MsgBuf.GetData(), &HtonlSendDataLength, 4);
+		memcpy(MsgBuf.GetData() + 4, &msg_type, 4);
+		memcpy(MsgBuf.GetData() + 8, SendData.GetData(), SendData.Num());
+	}
+	else
+	{
+		// 无协议类型
+		MsgBuf.SetNumUninitialized(FMath::Min(SendData.Num() + 4, 65535));
+
+		int SendDataLength = SendData.Num();
+		int HtonlSendDataLength = Tcphtonl(SendDataLength);
+		memset(MsgBuf.GetData(), 0, SendDataLength);
+
+		memcpy(MsgBuf.GetData(), &HtonlSendDataLength, 4);
+		memcpy(MsgBuf.GetData() + 4, SendData.GetData(), SendData.Num());
+	}
 
 	int32 SentBytes = 0;
 	bool bSuccess = m_Socket->Send(MsgBuf.GetData(), MsgBuf.Num(), SentBytes);
