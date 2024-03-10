@@ -145,11 +145,11 @@ bool UTcpSocketSubsystem::SendToServer(  const TArray<uint8>& SendData, int32 ms
 	if ( -1 != msg_type)
 	{
 		// 有协议类型
-		MsgBuf.SetNumUninitialized(FMath::Min(SendData.Num() + 8, 65535));
+		MsgBuf.SetNumZeroed(FMath::Min(SendData.Num() + 8, 65535));
 		
 		int SendDataLength = SendData.Num() + 4;
 		int HtonlSendDataLength = Tcphtonl(SendDataLength);
-		memset(MsgBuf.GetData(), 0, SendDataLength);
+		//memset(MsgBuf.GetData(), 0, SendDataLength);
 
 		memcpy(MsgBuf.GetData(), &HtonlSendDataLength, 4);
 		memcpy(MsgBuf.GetData() + 4, &msg_type, 4);
@@ -158,11 +158,11 @@ bool UTcpSocketSubsystem::SendToServer(  const TArray<uint8>& SendData, int32 ms
 	else
 	{
 		// 无协议类型
-		MsgBuf.SetNumUninitialized(FMath::Min(SendData.Num() + 4, 65535));
+		MsgBuf.SetNumZeroed(FMath::Min(SendData.Num() + 4, 65535));
 
 		int SendDataLength = SendData.Num();
 		int HtonlSendDataLength = Tcphtonl(SendDataLength);
-		memset(MsgBuf.GetData(), 0, SendDataLength);
+		//memset(MsgBuf.GetData(), 0, SendDataLength);
 
 		memcpy(MsgBuf.GetData(), &HtonlSendDataLength, 4);
 		memcpy(MsgBuf.GetData() + 4, SendData.GetData(), SendData.Num());
