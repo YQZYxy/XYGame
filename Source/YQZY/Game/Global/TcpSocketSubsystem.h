@@ -62,7 +62,4 @@ public:
 
 private:
 	class FSocket* m_Socket;
-
-	UPROPERTY()
-	TArray<uint8> m_MsgBuf;
 };

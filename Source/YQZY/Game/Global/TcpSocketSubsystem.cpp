@@ -32,8 +32,6 @@ void UTcpSocketSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	Super::Initialize(Collection);
 	m_Socket = nullptr;
 
-	m_MsgBuf.SetNumZeroed(65536);
-
 	this->ConnectToServer("192.168.3.102", 3723);
 
 	Role_Data RoleData ;
@@ -142,32 +140,38 @@ bool UTcpSocketSubsystem::SendToServer(  const TArray<uint8>& SendData, int32 ms
 		return false;
 	}
 
+	static TArray<uint8> MsgBuf;
+
 	if ( -1 != msg_type)
 	{
 		// 有协议类型
+		MsgBuf.SetNumUninitialized(FMath::Min(SendData.Num() + 8, 65535));
+		
 		int SendDataLength = SendData.Num() + 4;
 		int HtonlSendDataLength = Tcphtonl(SendDataLength);
-		memset(m_MsgBuf.GetData(), 0, SendDataLength);
+		memset(MsgBuf.GetData(), 0, SendDataLength);
 
-		memcpy(m_MsgBuf.GetData(), &HtonlSendDataLength, 4);
-		memcpy(m_MsgBuf.GetData() + 4, &msg_type, 4);
-		memcpy(m_MsgBuf.GetData() + 8, SendData.GetData(), SendData.Num());
+		memcpy(MsgBuf.GetData(), &HtonlSendDataLength, 4);
+		memcpy(MsgBuf.GetData() + 4, &msg_type, 4);
+		memcpy(MsgBuf.GetData() + 8, SendData.GetData(), SendData.Num());
 	}
 	else
 	{
 		// 无协议类型
+		MsgBuf.SetNumUninitialized(FMath::Min(SendData.Num() + 4, 65535));
+
 		int SendDataLength = SendData.Num();
 		int HtonlSendDataLength = Tcphtonl(SendDataLength);
-		memset(m_MsgBuf.GetData(), 0, SendDataLength);
+		memset(MsgBuf.GetData(), 0, SendDataLength);
 
-		memcpy(m_MsgBuf.GetData(), &HtonlSendDataLength, 4);
-		memcpy(m_MsgBuf.GetData() + 4, SendData.GetData(), SendData.Num());
+		memcpy(MsgBuf.GetData(), &HtonlSendDataLength, 4);
+		memcpy(MsgBuf.GetData() + 4, SendData.GetData(), SendData.Num());
 	}
 
 	int32 SentBytes = 0;
-	bool bSuccess = m_Socket->Send(m_MsgBuf.GetData(), m_MsgBuf.Num(), SentBytes);
+	bool bSuccess = m_Socket->Send(MsgBuf.GetData(), MsgBuf.Num(), SentBytes);
 
-	if (!bSuccess || SentBytes != m_MsgBuf.Num())
+	if (!bSuccess || SentBytes != MsgBuf.Num())
 	{
 		YQZYError("Failed to send data!");
 		return false;
