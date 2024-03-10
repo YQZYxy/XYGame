@@ -48,7 +48,7 @@ void UTcpSocketSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	memcpy(Msg.GetData(), &msg_type, 4);
 	RoleData.SerializeToArray(Msg.GetData() +4, Msg.Num()-4);
 
-	this->SendToServer(-1, Msg);
+	this->SendToServer(Msg);
 }
  
 void UTcpSocketSubsystem::Deinitialize()
@@ -127,7 +127,7 @@ bool UTcpSocketSubsystem::ConnectToServer(const FString& IP, int32 Port)
 
 }
 
-bool UTcpSocketSubsystem::SendToServer( int32 msg_type, const TArray<uint8>& SendData)
+bool UTcpSocketSubsystem::SendToServer(  const TArray<uint8>& SendData, int32 msg_type)
 {
 	if(nullptr == m_Socket)
 	{
@@ -135,7 +135,12 @@ bool UTcpSocketSubsystem::SendToServer( int32 msg_type, const TArray<uint8>& Sen
 		return false;
 	}
 
-	TArray<uint8> MsgBuf;
+	if (65535 <= SendData.Num() + 8)
+	{
+		return false;
+	}
+
+	static TArray<uint8> MsgBuf;
 
 	if ( -1 != msg_type)
 	{

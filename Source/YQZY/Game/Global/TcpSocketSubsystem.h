@@ -21,7 +21,7 @@ public:
 	 bool ConnectToServer(const FString& IP, int32 Port = 8888);
 
 	UFUNCTION(BlueprintCallable, Category = "TcpSocketSubsystem")
-	 bool SendToServer(int32 msg_type, const TArray<uint8>& SendData);
+	 bool SendToServer(const TArray<uint8>& SendData, int32 msg_type = -1);
 
 	UFUNCTION(BlueprintCallable, Category = "TcpSocketSubsystem")
 	 bool DisConnectToServer();
