@@ -37,7 +37,7 @@ void UTcpSocketSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	Role_Data RoleData;
 
 	RoleData.set_role_id(9527);
-	RoleData.set_role_name("桂林仔我打的四大五打的卡哦哦爱打架OA大家哦啊京东");
+	RoleData.set_role_name("桂林仔");
 
 	int32 msg_type = 100;
 
