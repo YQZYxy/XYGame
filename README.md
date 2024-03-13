@@ -9,7 +9,8 @@ SourceDistribution.txt      // 源码版
 
 D:\UEEditors\UE5.3.2\UnrealEngine\Engine\Source\Runtime\ApplicationCore\Private\Windows\WindowsPlatformApplicationMisc.cpp
 
-Traditi
+protoc --cpp_out=dllexport_decl=MY_EXPORT_MACRO:path/to/output/dir myproto.proto`来实现为所有的类添加`MY_EXPORT_MACRO`修饰符。然后在另外一个h文件中定义`MY_EXPORT_MACRO`宏，然后在所有的头文件中包含它
+
 
 3.3 FString To Array[uint8]
 //方法1
