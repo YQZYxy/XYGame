@@ -43,7 +43,8 @@ public class YQZY : ModuleRules
                 "Networking",
                 "Sockets",
                 "Json",
-                "JsonUtilities"
+                "JsonUtilities",
+                "libprotobuf"
             }
         );
 
