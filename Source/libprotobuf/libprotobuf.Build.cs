@@ -12,10 +12,13 @@ public class libprotobuf : ModuleRules
 		string protobufPath = ModuleDirectory;
 
 		bool is_supported = false;
+		bool is_window_64 = false;
 		if (Target.Platform.ToString() == "Win64")
 		{
 			is_supported = true;
-			PublicAdditionalLibraries.Add(Path.Combine(protobufPath, "lib", "win64", 
+            is_window_64 = true;
+
+            PublicAdditionalLibraries.Add(Path.Combine(protobufPath, "lib", "win64", 
 				ConfigurationDir(Target.Configuration), "libprotobuf.lib"));
 		}
 		else if(Target.Platform.ToString() == "Linux")
@@ -56,11 +59,16 @@ public class libprotobuf : ModuleRules
 				ConfigurationDir(Target.Configuration), "libprotobuf.a"));
 		}
 
-		if (is_supported)
+		if (is_supported && is_window_64)
 		{
 			PublicSystemIncludePaths.Add(Path.Combine(protobufPath, "include"));
 		}
-	}
+
+        if (is_supported && !is_window_64)
+        {
+            PublicSystemIncludePaths.Add(Path.Combine(protobufPath, "arminclude"));
+        }
+    }
 
 	public string ConfigurationDir(UnrealTargetConfiguration Configuration)
 	{
