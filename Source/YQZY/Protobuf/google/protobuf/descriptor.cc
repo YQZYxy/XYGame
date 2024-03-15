@@ -7807,8 +7807,8 @@ void FieldDescriptor::InternalTypeOnceInit() const {
       } else {
         name = lazy_default_value_enum_name_;
       }
-      Symbol result = file()->pool()->CrossLinkOnDemandHelper(name, true);
-      default_value_enum_ = result.enum_value_descriptor();
+      Symbol result_ = file()->pool()->CrossLinkOnDemandHelper(name, true);
+      default_value_enum_ = result_.enum_value_descriptor();
     } else {
       default_value_enum_ = nullptr;
     }

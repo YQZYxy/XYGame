@@ -1,4 +1,4 @@
-// Protocol Buffers - Google's data interchange format
+﻿// Protocol Buffers - Google's data interchange format
 // Copyright 2008 Google Inc.  All rights reserved.
 // https://developers.google.com/protocol-buffers/
 //
@@ -37,6 +37,8 @@
 #include <sstream>
 #include <stdio.h>
 #include <vector>
+
+#define HAVE_PTHREAD
 
 #ifdef _WIN32
 #ifndef WIN32_LEAN_AND_MEAN
