@@ -12,6 +12,7 @@ public class YQZY : ModuleRules
 		new string[] {
                 "YQZY",
                 "YQZY/Game",
+                "YQZY/Protobuf/google",
                 "YQZY/Protobuf"
             }
         );
@@ -44,7 +45,6 @@ public class YQZY : ModuleRules
                 "Sockets",
                 "Json",
                 "JsonUtilities",
-                "libprotobuf"
             }
         );
 
