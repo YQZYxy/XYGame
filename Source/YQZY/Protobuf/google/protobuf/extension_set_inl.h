@@ -99,7 +99,21 @@ const char* ExtensionSet::ParseFieldWithExtensionInfo(
       HANDLE_VARINT_TYPE(INT64, Int64);
       HANDLE_VARINT_TYPE(UINT32, UInt32);
       HANDLE_VARINT_TYPE(UINT64, UInt64);
-     // HANDLE_VARINT_TYPE(BOOL, Bool);
+	  //HANDLE_VARINT_TYPE(BOOL, Bool);
+	case WireFormatLite::TYPE_BOOL: {
+        uint64_t value;
+		ptr = VarintParse(ptr, &value);
+		GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
+		if (extension.is_repeated) {
+
+			AddBool(number, WireFormatLite::TYPE_BOOL,
+				extension.is_packed, value != 0, extension.descriptor);
+		}
+		else {
+			SetBool(number, WireFormatLite::TYPE_BOOL, value != 0,
+				extension.descriptor);
+		}
+	} break;
 #undef HANDLE_VARINT_TYPE
 #define HANDLE_SVARINT_TYPE(UPPERCASE, CPP_CAMELCASE, SIZE)                 \
   case WireFormatLite::TYPE_##UPPERCASE: {                                  \

@@ -906,11 +906,26 @@ const char* WireFormat::_InternalParseAndMergeField(
     return ptr;                                           \
   }
 
-    //HANDLE_TYPE(BOOL, uint64_t, Bool)
+    
     HANDLE_TYPE(INT32, uint32_t, Int32)
     HANDLE_TYPE(INT64, uint64_t, Int64)
     HANDLE_TYPE(UINT32, uint32_t, UInt32)
     HANDLE_TYPE(UINT64, uint64_t, UInt64)
+    //HANDLE_TYPE(BOOL, uint64_t, Bool)
+  case FieldDescriptor::TYPE_BOOL: {
+        uint64_t value;
+		ptr = VarintParse(ptr, &value);
+		if (ptr == nullptr) return nullptr;
+		if (field->is_repeated()) {
+
+			reflection->AddBool(msg, field, value != 0);
+		}
+		else {
+
+			reflection->SetBool(msg, field, value != 0);
+		}
+		return ptr;
+	}
 
     case FieldDescriptor::TYPE_SINT32: {
       int32_t value = ReadVarintZigZag32(&ptr);

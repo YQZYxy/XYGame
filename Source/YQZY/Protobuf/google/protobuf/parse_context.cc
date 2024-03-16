@@ -30,14 +30,14 @@
 
 #include <google/protobuf/parse_context.h>
 
-//#include <google/protobuf/stubs/stringprintf.h>
+#include <google/protobuf/stubs/stringprintf.h>
 #include <google/protobuf/io/coded_stream.h>
 #include <google/protobuf/io/zero_copy_stream.h>
 #include <google/protobuf/arenastring.h>
 #include <google/protobuf/message_lite.h>
 #include <google/protobuf/repeated_field.h>
 #include <google/protobuf/wire_format_lite.h>
-//#include <google/protobuf/stubs/strutil.h>
+#include <google/protobuf/stubs/strutil.h>
 
 #include <google/protobuf/port_def.inc>
 
@@ -413,12 +413,12 @@ const char* VarintParser(void* object, const char* ptr, ParseContext* ctx) {
     T val;
     if (sign) {
       if (sizeof(T) == 8) {
-        val = (WireFormatLite::ZigZagDecode64(varint) != 0);
+        val = WireFormatLite::ZigZagDecode64(varint) != 0;
       } else {
-        val = (WireFormatLite::ZigZagDecode32(varint) != 0);
+        val = WireFormatLite::ZigZagDecode32(varint) != 0;
       }
     } else {
-      val = (varint != 0);
+      val = varint != 0;
     }
     static_cast<RepeatedField<T>*>(object)->Add(val);
   });

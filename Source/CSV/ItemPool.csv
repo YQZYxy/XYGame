@@ -1,0 +1,4 @@
+---,type,item_id,max_num,IsOverlapping,IsDiscard,name,description
+NewRow,"0","1","50","0","0","key",""
+NewRow_0,"0","2","80","1","0","weapan",""
+NewRow_1,"0","3","40","0","0","",""
