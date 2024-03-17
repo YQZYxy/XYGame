@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "WeaponConfig.h"
@@ -65,7 +65,7 @@ const FWeaponData* UWeaponConfig::GetItemBaseDataPtr(int item_id)const
 
 bool UWeaponConfig::InitWeaponDataCfg(const FName& path, FString& err)
 {
-	GET_CONFIG_ROWNAMES("WeaponConfig1", ContextString, RowNames);
+	GET_CONFIG_ROWNAMES("WeaponConfig", ContextString, RowNames);
 
 	for (auto& name : RowNames)
 	{

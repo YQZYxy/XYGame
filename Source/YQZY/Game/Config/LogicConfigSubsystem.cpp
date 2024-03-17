@@ -110,7 +110,7 @@ ULogicConfig* ULogicConfigSubsystem::GetConfigByName(FName class_name)
 
 bool ULogicConfigSubsystem::InitPath()
 {	
-	UDataTable* pDataTable = LoadObject<UDataTable>(NULL, TEXT("/Script/Engine.DataTable'/Game/DataTable/Config/ConfigManager.ConfigManager'")); ///Script/Engine.DataTable'
+	UDataTable* pDataTable = LoadObject<UDataTable>(NULL, TEXT("Script/Engine.DataTable'/Game/DataTable/Config/LogicConfigManagerData.LogicConfigManagerData'")); ////
 	if (!pDataTable)
 	{
 		YQZYError("ULogicConfigSubsystem LoadObject NULL ");

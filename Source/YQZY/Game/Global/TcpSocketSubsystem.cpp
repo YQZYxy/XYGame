@@ -32,7 +32,7 @@ void UTcpSocketSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	Super::Initialize(Collection);
 	m_Socket = nullptr;
 
-	this->ConnectToServer("192.168.3.102", 3723);
+	//this->ConnectToServer("192.168.3.102", 3723);
 
 	//Role_Data RoleData;
 

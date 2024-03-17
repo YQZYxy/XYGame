@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -45,9 +45,9 @@ class YQZY_API UWeaponConfig : public ULogicConfig
 public:
 	virtual bool Init(const FName& path, FString& err)override;
 
-	UFUNCTION(BlueprintCallable, Category = "AYQZY_WeaponConfig")
+	UFUNCTION(BlueprintCallable, Category = "AYQZYWeaponConfig")
 	bool FindItemById(int item_id);
-	UFUNCTION(BlueprintCallable, Category = "AYQZY_WeaponConfig")
+	UFUNCTION(BlueprintCallable, Category = "AYQZYWeaponConfig")
 	const FWeaponData GetItemBaseData(int item_id)const;
 
 	const FWeaponData* GetItemBaseDataPtr(int item_id)const;
