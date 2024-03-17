@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
@@ -63,22 +63,22 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection);
 	virtual void Deinitialize();
 
-	UFUNCTION(BlueprintCallable, Category = "AYQZY_LogicConfigSubsystem")
-	static bool OnReload(ULogicConfigSubsystem* in);
-
-	UFUNCTION(BlueprintCallable, Category = "AYQZY_LogicConfigSubsystem")
+	UFUNCTION(BlueprintCallable, Category = "AYQZYLogicConfigSubsystem")
 	static ULogicConfigSubsystem* GetLogicConfigSubsystem(UWorld* world);
 
-	UFUNCTION(BlueprintCallable, Category = "AYQZY_LogicConfigSubsystem")
+	UFUNCTION(BlueprintCallable, Category = "AYQZYLogicConfigSubsystem")
+	static bool OnReload(ULogicConfigSubsystem* in);
+
+	UFUNCTION(BlueprintCallable, Category = "AYQZYLogicConfigSubsystem")
 	static bool LoadCfg(TMap<FName, ULogicConfig*>& class_config_map, const TMap<FName, FName>& data_path_map);
 
-	UFUNCTION(BlueprintCallable, Category = "AYQZY_LogicConfigSubsystem")
+	UFUNCTION(BlueprintCallable, Category = "AYQZYLogicConfigSubsystem")
 	ULogicConfig* GetConfigByName(FName class_name);
 
-	UFUNCTION(BlueprintCallable, Category = "AYQZY_LogicConfigSubsystem")
+	UFUNCTION(BlueprintCallable, Category = "AYQZYLogicConfigSubsystem")
 	TMap<FName, FName>& GetPathMap() {return m_data_path_map;}
 
-	UFUNCTION(BlueprintCallable, Category = "AYQZY_LogicConfigSubsystem")
+	UFUNCTION(BlueprintCallable, Category = "AYQZYLogicConfigSubsystem")
 	bool SetClassConfigMap(const TMap<FName, ULogicConfig*>& class_config_map);
 
 private:

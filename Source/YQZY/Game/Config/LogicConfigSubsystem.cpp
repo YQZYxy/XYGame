@@ -1,4 +1,4 @@
-#include "LogicConfigSubsystem.h"
+﻿#include "LogicConfigSubsystem.h"
 #include "YQZYLog.h"
 #include "LogicConfig.h"
 #include "Game/Config/Weaponconfig/WeaponConfig.h"
@@ -33,6 +33,11 @@ void ULogicConfigSubsystem::Deinitialize()
 	Super::Deinitialize();
 }
 
+ULogicConfigSubsystem* ULogicConfigSubsystem::GetLogicConfigSubsystem(UWorld* world)
+{
+	UGameInstance* GameInstance = world ? world->GetGameInstance() : nullptr;
+	return GameInstance ? GameInstance->GetSubsystem<ULogicConfigSubsystem>() : nullptr;
+}
 
 bool ULogicConfigSubsystem::InitObject(TMap<FName, ULogicConfig*>& class_config_map)
 {
@@ -90,11 +95,7 @@ bool ULogicConfigSubsystem::SetClassConfigMap(const TMap<FName, ULogicConfig*>& 
 }
 
 
-ULogicConfigSubsystem* ULogicConfigSubsystem::GetLogicConfigSubsystem(UWorld* world)
-{
-	UGameInstance* GameInstance = world ? world->GetGameInstance() : nullptr;
-	return GameInstance ? GameInstance->GetSubsystem<ULogicConfigSubsystem>() : nullptr;
-}
+
 
 ULogicConfig* ULogicConfigSubsystem::GetConfigByName(FName class_name)
 {
