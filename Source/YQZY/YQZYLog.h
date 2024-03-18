@@ -8,10 +8,10 @@ YQZY_API DECLARE_LOG_CATEGORY_EXTERN(YQZYLog, Log, All);
 
 
 #if PLATFORM_LINUX || PLATFORM_ANDROID
-#define YQZYDebug(format, ...) UE_LOG(YQZYLog, Log, TEXT("[<%d>] " format),  __LINE__, ##__VA_ARGS__)
-#define YQZYWarning(format, ...) UE_LOG(YQZYLog, Warning,TEXT("[<%d>] " format), __LINE__, ##__VA_ARGS__)
-#define YQZYError(format, ...) UE_LOG(YQZYLog, Error, TEXT("[<%d>] " format),  __LINE__, ##__VA_ARGS__)
-#define YQZYFatal(format, ...) UE_LOG(YQZYLog, Fatal, TEXT("[<%d>] " format), __LINE__, ##__VA_ARGS__)
+#define YQZYDebug(format, ...) UE_LOG(YQZYLog, Log, TEXT("[%s::<%d>]  " format), *FString(__FUNCTION__),  __LINE__, ##__VA_ARGS__)
+#define YQZYWarning(format, ...) UE_LOG(YQZYLog, Warning,TEXT("[%s::<%d>]  " format), *FString(__FUNCTION__), __LINE__, ##__VA_ARGS__)
+#define YQZYError(format, ...) UE_LOG(YQZYLog, Error, TEXT("[%s::<%d>]  " format), *FString(__FUNCTION__),  __LINE__, ##__VA_ARGS__)
+#define YQZYFatal(format, ...) UE_LOG(YQZYLog, Fatal, TEXT("[%s::<%d>]  " format), *FString(__FUNCTION__), __LINE__, ##__VA_ARGS__)
 #endif
 
 #if PLATFORM_WINDOWS
