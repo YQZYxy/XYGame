@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 #include "Subsystems/GameInstanceSubsystem.h"
@@ -52,19 +52,19 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection);
 	virtual void Deinitialize();
 
-	UFUNCTION(BlueprintCallable, Category = "AYQZY_ItemPool")
+	UFUNCTION(BlueprintCallable, Category = "AYQZYItemPool")
 	static UBPItemPool* GetBPItemPool(UWorld* world);
 
-	UFUNCTION(BlueprintCallable, Category = "AYQZY_ItemPool")
+	UFUNCTION(BlueprintCallable, Category = "AYQZYItemPool")
 	bool Init();
 
-	UFUNCTION(BlueprintCallable, Category = "AYQZY_ItemPool")
+	UFUNCTION(BlueprintCallable, Category = "AYQZYItemPool")
 	static bool OnReload();
 
 
-	UFUNCTION(BlueprintCallable, Category = "AYQZY_ItemPool")
+	UFUNCTION(BlueprintCallable, Category = "AYQZYItemPool")
 	bool FindItemById(int item_id);
-	UFUNCTION(BlueprintCallable,Category = "AYQZY_ItemPool")
+	UFUNCTION(BlueprintCallable,Category = "AYQZYItemPool")
 	const FItemBaseData GetItemBaseData(int item_id)const;
 	
 

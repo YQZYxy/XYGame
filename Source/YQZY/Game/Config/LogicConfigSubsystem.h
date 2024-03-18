@@ -52,8 +52,8 @@ public:
 	ULogicConfigSubsystem();
 	
 	//在InitObject里面添加 DEF_CONFIG 对应 NEW_CONFIG类型
-	DEF_CONFIG(UWeaponConfig);
-	DEF_CONFIG(UTaskConfig);
+	DEF_CONFIG(UWeaponConfig)
+	DEF_CONFIG(UTaskConfig)
 
 private:
 	static bool InitObject(TMap<FName, ULogicConfig*>& class_config_map);

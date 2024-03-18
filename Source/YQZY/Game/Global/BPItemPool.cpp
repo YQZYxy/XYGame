@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "BPItemPool.h"
@@ -42,7 +42,7 @@ bool UBPItemPool::Init()
 {
 	m_item_pool.Reset();
 
-	UDataTable* pDataTable = LoadObject<UDataTable>(NULL, TEXT("/Game/DataTable/Item/ItemPool.ItemPool")); ///Script/Engine.DataTable'
+	UDataTable* pDataTable = LoadObject<UDataTable>(NULL, TEXT("/Script/Engine.DataTable'/Game/DataTable/Item/ItemPoolData.ItemPoolData'")); ///Script/Engine.DataTable'
 	if (!pDataTable)
 	{
 		return false;
