@@ -31,18 +31,18 @@ AProjectileAct::AProjectileAct()
 		SphereComponent->OnComponentHit.AddDynamic(this, &AProjectileAct::OnProjectileImpact);
 	}
 
-	//定义将作为视觉呈现的网格体。
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> DefaultMesh(TEXT("/Game/StarterContent/Shapes/Shape_Sphere.Shape_Sphere"));
+	////定义将作为视觉呈现的网格体。
+	//static ConstructorHelpers::FObjectFinder<UStaticMesh> DefaultMesh(TEXT("/Game/StarterContent/Shapes/Shape_Sphere.Shape_Sphere"));
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	StaticMesh->SetupAttachment(RootComponent);
 
-	//如果成功找到要用的网格体资产，则设置静态网格体及其位置/比例。
-	if (DefaultMesh.Succeeded())
-	{
-		StaticMesh->SetStaticMesh(DefaultMesh.Object);
-		StaticMesh->SetRelativeLocation(FVector(0.0f, 0.0f, -37.5f));
-		StaticMesh->SetRelativeScale3D(FVector(0.75f, 0.75f, 0.75f));
-	}
+	////如果成功找到要用的网格体资产，则设置静态网格体及其位置/比例。
+	//if (DefaultMesh.Succeeded())
+	//{
+	//	StaticMesh->SetStaticMesh(DefaultMesh.Object);
+	//	StaticMesh->SetRelativeLocation(FVector(0.0f, 0.0f, -37.5f));
+	//	StaticMesh->SetRelativeScale3D(FVector(0.75f, 0.75f, 0.75f));
+	//}
 
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> DefaultExplosionEffect(TEXT("/Game/StarterContent/Particles/P_Explosion.P_Explosion"));
 	if (DefaultExplosionEffect.Succeeded())
@@ -53,8 +53,8 @@ AProjectileAct::AProjectileAct()
 	//Definition for the Projectile Movement Component.
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement"));
 	ProjectileMovementComponent->SetUpdatedComponent(SphereComponent);
-	ProjectileMovementComponent->InitialSpeed = 1500.0f;
-	ProjectileMovementComponent->MaxSpeed = 1500.0f;
+	ProjectileMovementComponent->InitialSpeed = 15.0f;
+	ProjectileMovementComponent->MaxSpeed = 150.0f;
 	ProjectileMovementComponent->bRotationFollowsVelocity = true;
 	ProjectileMovementComponent->ProjectileGravityScale = 0.0f;
 
