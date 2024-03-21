@@ -45,6 +45,7 @@ public class YQZY : ModuleRules
                 "Sockets",
                 "Json",
                 "JsonUtilities",
+                "VisualStudioTools",
             }
         );
 

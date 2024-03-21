@@ -30,11 +30,11 @@ public:
 	class USphereComponent* SphereComponent;
 
 	// Static Mesh used to provide a visual representation of the object.
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	class UStaticMeshComponent* StaticMesh;
 
 	// Movement component for handling projectile movement.
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	class UProjectileMovementComponent* ProjectileMovementComponent;
 
 	// Particle used when the projectile impacts against another object and explodes.

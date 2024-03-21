@@ -113,5 +113,5 @@ void ADemoCpt::HandleFire_Implementation()
 	spawnParameters.Instigator = GetInstigator();
 	spawnParameters.Owner = this;
 
-	AProjectileAct* spawnedProjectile = GetWorld()->SpawnActor<AProjectileAct>(spawnLocation, spawnRotation, spawnParameters);
+	AProjectileAct* spawnedProjectile = GetWorld()->SpawnActor<AProjectileAct>(ProjectileClass, spawnLocation, spawnRotation, spawnParameters);
 }

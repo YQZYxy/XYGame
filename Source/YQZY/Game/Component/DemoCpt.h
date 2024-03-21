@@ -23,7 +23,7 @@ public:
 protected:
 
 	/** 玩家的最大生命值。这是玩家的最高生命值，也是出生时的生命值。*/
-	UPROPERTY(EditDefaultsOnly, Category = "Health")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float MaxHealth;
 
 	/** 玩家的当前生命值。降到0就表示死亡。*/
@@ -57,11 +57,11 @@ public:
 
 protected:
 
-	UPROPERTY(EditDefaultsOnly, Category = "Gameplay|Projectile")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay|Projectile")
 	TSubclassOf<class AProjectileAct> ProjectileClass;
 
 	/** 射击之间的延迟，单位为秒。用于控制测试发射物的射击速度，还可防止服务器函数的溢出导致将SpawnProjectile直接绑定至输入。*/
-	UPROPERTY(EditDefaultsOnly, Category = "Gameplay")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay")
 	float FireRate;
 
 	/** 若为true，此武器正在发射过程中。*/
