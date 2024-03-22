@@ -37,6 +37,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	class UProjectileMovementComponent* ProjectileMovementComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	float m_InitialSpeed = 1000.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	float m_MaxSpeed = 1000.0f;
+
 	// Particle used when the projectile impacts against another object and explodes.
 	UPROPERTY(EditAnywhere, Category = "Effects")
 	class UParticleSystem* ExplosionEffect;
