@@ -53,8 +53,8 @@ AProjectileAct::AProjectileAct()
 	//Definition for the Projectile Movement Component.
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement"));
 	ProjectileMovementComponent->SetUpdatedComponent(SphereComponent);
-	ProjectileMovementComponent->InitialSpeed = 1000.0f;
-	ProjectileMovementComponent->MaxSpeed = 1500.0f;
+	ProjectileMovementComponent->InitialSpeed = m_InitialSpeed;
+	ProjectileMovementComponent->MaxSpeed = m_MaxSpeed;
 	ProjectileMovementComponent->bRotationFollowsVelocity = true;
 	ProjectileMovementComponent->ProjectileGravityScale = 0.0f;
 

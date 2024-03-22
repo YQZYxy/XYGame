@@ -16,14 +16,14 @@
 ADemoCpt::ADemoCpt()
 {
 	//初始化玩家生命值
-	MaxHealth = 100.0f;
-	CurrentHealth = MaxHealth;
+	m_MaxHealth = 100.0f;
+	m_CurrentHealth = m_MaxHealth;
 
 	//初始化投射物类
 	ProjectileClass = AProjectileAct::StaticClass();
 	//初始化射速
-	FireRate = 0.25f;
-	bIsFiringWeapon = false;
+	m_FireRate = 0.25f;
+	m_bIsFiringWeapon = false;
 }
 
 
@@ -36,7 +36,7 @@ void ADemoCpt::GetLifetimeReplicatedProps(TArray <FLifetimeProperty>& OutLifetim
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	//Replicate current health.
-	DOREPLIFETIME(ADemoCpt, CurrentHealth);
+	DOREPLIFETIME(ADemoCpt, m_CurrentHealth);
 }
 
 void ADemoCpt::OnHealthUpdate()
@@ -44,20 +44,21 @@ void ADemoCpt::OnHealthUpdate()
 	//客户端特定的功能
 	if (IsLocallyControlled())
 	{
-		FString healthMessage = FString::Printf(TEXT("You now have %f health remaining."), CurrentHealth);
+		FString healthMessage = FString::Printf(TEXT("You now have %f health remaining."), m_CurrentHealth);
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, healthMessage);
 
-		if (CurrentHealth <= 0)
+		if (m_CurrentHealth <= 0)
 		{
 			FString deathMessage = FString::Printf(TEXT("You have been killed."));
 			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, deathMessage);
+			Destroy();
 		}
 	}
 
 	//服务器特定的功能
 	if (GetLocalRole() == ROLE_Authority)
 	{
-		FString healthMessage = FString::Printf(TEXT("%s now has %f health remaining."), *GetFName().ToString(), CurrentHealth);
+		FString healthMessage = FString::Printf(TEXT("%s now has %f health remaining."), *GetFName().ToString(), m_CurrentHealth);
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, healthMessage);
 	}
 
@@ -76,32 +77,32 @@ void ADemoCpt::SetCurrentHealth(float healthValue)
 {
 	if (GetLocalRole() == ROLE_Authority)
 	{
-		CurrentHealth = FMath::Clamp(healthValue, 0.f, MaxHealth);
+		m_CurrentHealth = FMath::Clamp(healthValue, 0.f, m_MaxHealth);
 		OnHealthUpdate();
 	}
 }
 
 float ADemoCpt::TakeDamage(float DamageTaken, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
-	float damageApplied = CurrentHealth - DamageTaken;
+	float damageApplied = m_CurrentHealth - DamageTaken;
 	SetCurrentHealth(damageApplied);
 	return damageApplied;
 }
 
 void ADemoCpt::StartFire()
 {
-	if (!bIsFiringWeapon)
+	if (!m_bIsFiringWeapon)
 	{
-		bIsFiringWeapon = true;
+		m_bIsFiringWeapon = true;
 		UWorld* World = GetWorld();
-		World->GetTimerManager().SetTimer(FiringTimer, this, &ADemoCpt::StopFire, FireRate, false);
+		World->GetTimerManager().SetTimer(m_FiringTimer, this, &ADemoCpt::StopFire, m_FireRate, false);
 		HandleFire();
 	}
 }
 
 void ADemoCpt::StopFire()
 {
-	bIsFiringWeapon = false;
+	m_bIsFiringWeapon = false;
 }
 
 void ADemoCpt::HandleFire_Implementation()

@@ -24,11 +24,11 @@ protected:
 
 	/** 玩家的最大生命值。这是玩家的最高生命值，也是出生时的生命值。*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
-	float MaxHealth;
+	float m_MaxHealth;
 
 	/** 玩家的当前生命值。降到0就表示死亡。*/
 	UPROPERTY(ReplicatedUsing = OnRep_CurrentHealth)
-	float CurrentHealth;
+	float m_CurrentHealth;
 
 	/** RepNotify，用于同步对当前生命值所做的更改。*/
 	UFUNCTION()
@@ -41,11 +41,11 @@ public:
 
 	/** 最大生命值的取值函数。*/
 	UFUNCTION(BlueprintPure, Category = "Health")
-	FORCEINLINE float GetMaxHealth() const { return MaxHealth; }
+	FORCEINLINE float GetMaxHealth() const { return m_MaxHealth; }
 
 	/** 当前生命值的取值函数。*/
 	UFUNCTION(BlueprintPure, Category = "Health")
-	FORCEINLINE float GetCurrentHealth() const { return CurrentHealth; }
+	FORCEINLINE float GetCurrentHealth() const { return m_CurrentHealth; }
 
 	/** 当前生命值的存值函数。将此值的范围限定在0到MaxHealth之间，并调用OnHealthUpdate。仅在服务器上调用。*/
 	UFUNCTION(BlueprintCallable, Category = "Health")
@@ -62,10 +62,10 @@ protected:
 
 	/** 射击之间的延迟，单位为秒。用于控制测试发射物的射击速度，还可防止服务器函数的溢出导致将SpawnProjectile直接绑定至输入。*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay")
-	float FireRate;
+	float m_FireRate;
 
 	/** 若为true，此武器正在发射过程中。*/
-	bool bIsFiringWeapon;
+	bool m_bIsFiringWeapon;
 
 	/** 用于启动武器发射的函数。应仅可由本地玩家触发。*/
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
@@ -80,5 +80,5 @@ protected:
 	void HandleFire();
 
 	/** 定时器句柄，用于提供生成间隔时间内的射速延迟。*/
-	FTimerHandle FiringTimer;
+	FTimerHandle m_FiringTimer;
 };
