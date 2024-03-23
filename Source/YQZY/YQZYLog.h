@@ -24,11 +24,11 @@ YQZY_API DECLARE_LOG_CATEGORY_EXTERN(YQZYLog, Log, All);
 YQZY_API FString GetClientServerContextString(UObject* ContextOYQZYLogbject = nullptr);
 
 
-#define GE_DEBUG_ITC(id,time,color, info)\
-GEngine->AddOnScreenDebugMessage(id, time, color, TEXT(#info));
+#define GE_DEBUG_ITC(id,time,color, format, ...)\
+GEngine->AddOnScreenDebugMessage(id, time, color, FString::Printf(TEXT(format), ##__VA_ARGS__));
 
-#define GE_DEBUG_TC(time,color, info)\
-GE_DEBUG_ITC(-1, time,color,info)
+#define GE_DEBUG_TC(time,color, format, ...)\
+GE_DEBUG_ITC(-1, time,color,format,##__VA_ARGS__)
 
-#define GE_DEBUG(info)\
-GE_DEBUG_ITC(-1, 3.0, FColor::Green,info)
+#define GE_DEBUG(format, ...)\
+GE_DEBUG_ITC(-1, 1.0, FColor::Green,format,##__VA_ARGS__)

@@ -15,13 +15,10 @@
 // 设置默认值
 ADemoCpt::ADemoCpt()
 {
-	//初始化玩家生命值
 	m_MaxHealth = 100.0f;
 	m_CurrentHealth = m_MaxHealth;
 
-	//初始化投射物类
 	ProjectileClass = AProjectileAct::StaticClass();
-	//初始化射速
 	m_FireRate = 0.25f;
 	m_bIsFiringWeapon = false;
 }

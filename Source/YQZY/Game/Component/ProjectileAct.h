@@ -25,7 +25,6 @@ public:
 
 
 public:
-	// 用于测试碰撞的球体组件。
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class USphereComponent* SphereComponent;
 
@@ -46,7 +45,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Effects")
 	class UParticleSystem* ExplosionEffect;
 
-	//此投射物将造成的伤害类型和伤害值。
+	//造成的伤害类型和伤害值。
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage")
 	TSubclassOf<class UDamageType> DamageType;
 
