@@ -12,7 +12,6 @@
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(DemoCpt)
 
-// 设置默认值
 ADemoCpt::ADemoCpt()
 {
 	m_MaxHealth = 100.0f;
@@ -57,7 +56,7 @@ void ADemoCpt::OnHealthUpdate()
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, healthMessage);
 	}
 
-	//在所有都执行的函数。
+	//都执行。
 	/*
 		
 	*/

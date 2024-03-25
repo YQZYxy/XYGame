@@ -10,7 +10,6 @@ class YQZY_API ADemoCpt : public AYQZYCharacter
 	GENERATED_BODY()
 
 public:
-	// 设置此 empty 属性的默认值
 	ADemoCpt();
 
 protected:
@@ -32,7 +31,7 @@ protected:
 	UFUNCTION()
 	void OnRep_CurrentHealth();
 
-	/** 修改后，立即在服务器上调用，并在客户端上调用以响应RepNotify*/
+	/** 修改后，立即在Server上调用，并在client上调用以响应RepNotify*/
 	void OnHealthUpdate();
 
 public:
@@ -43,7 +42,7 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Health")
 	FORCEINLINE float GetCurrentHealth() const { return m_CurrentHealth; }
 
-	/**仅在服务器上调用。*/
+	/**仅在Server上。*/
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	void SetCurrentHealth(float healthValue);
 
@@ -58,14 +57,13 @@ protected:
 
 	bool m_bIsFiringWeapon;
 
-	/** 应仅可由本地触发。*/
+	/** 本地触发。*/
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	void StartFire();
 
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	void StopFire();
 
-	/** 服务器函数。*/
 	UFUNCTION(Server, Reliable)
 	void HandleFire();
 

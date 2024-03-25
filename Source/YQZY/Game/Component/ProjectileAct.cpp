@@ -23,7 +23,6 @@ AProjectileAct::AProjectileAct()
 	SphereComponent->SetCollisionProfileName(TEXT("BlockAllDynamic"));
 	RootComponent = SphereComponent;
 
-	//事件上注册函数。
 	if (GetLocalRole() == ROLE_Authority)
 	{
 		SphereComponent->OnComponentHit.AddDynamic(this, &AProjectileAct::OnProjectileImpact);
