@@ -1,5 +1,6 @@
 ﻿#include "DemoCpt.h"
 #include "ProjectileAct.h"
+#include "YQZYLog.h"
 
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -89,7 +90,8 @@ void ADemoCpt::StartFire()
 	{
 		m_bIsFiringWeapon = true;
 		UWorld* World = GetWorld();
-		World->GetTimerManager().SetTimer(m_FiringTimer, this, &ADemoCpt::StopFire, m_FireRate, false);
+		//World->GetTimerManager().SetTimer(m_FiringTimer, this, &ADemoCpt::StopFire, m_FireRate, false);
+		SET_TIMER(m_FiringTimer,&ADemoCpt::StopFire,m_FireRate);
 		HandleFire();
 	}
 }

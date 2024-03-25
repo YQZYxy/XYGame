@@ -32,3 +32,10 @@ GE_DEBUG_ITC(-1, time,color,format,##__VA_ARGS__)
 
 #define GE_DEBUG(format, ...)\
 GE_DEBUG_ITC(-1, 1.0, FColor::Green,format,##__VA_ARGS__)
+
+
+#define SET_TIMER(TimerHandle, Function, Rate)\
+World->GetTimerManager().SetTimer(TimerHandle, this, Function, Rate, false);
+
+#define SET_TIMER_LOOP(TimerHandle, Function, Rate)\
+World->GetTimerManager().SetTimer(TimerHandle, this, Function, Rate, true);
