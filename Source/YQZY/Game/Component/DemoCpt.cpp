@@ -38,7 +38,6 @@ void ADemoCpt::GetLifetimeReplicatedProps(TArray <FLifetimeProperty>& OutLifetim
 
 void ADemoCpt::OnHealthUpdate()
 {
-	//客户端特定的功能
 	if (IsLocallyControlled())
 	{
 		FString healthMessage = FString::Printf(TEXT("You now have %f health remaining."), m_CurrentHealth);
@@ -52,16 +51,15 @@ void ADemoCpt::OnHealthUpdate()
 		}
 	}
 
-	//服务器特定的功能
 	if (GetLocalRole() == ROLE_Authority)
 	{
 		FString healthMessage = FString::Printf(TEXT("%s now has %f health remaining."), *GetFName().ToString(), m_CurrentHealth);
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, healthMessage);
 	}
 
-	//在所有机器上都执行的函数。
+	//在所有都执行的函数。
 	/*
-		因任何因伤害或死亡而产生的特殊功能都应放在这里。
+		
 	*/
 }
 

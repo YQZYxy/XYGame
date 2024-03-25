@@ -11,7 +11,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "UObject/ConstructorHelpers.h"
 
-// 设置默认值
+
 AProjectileAct::AProjectileAct()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -23,7 +23,7 @@ AProjectileAct::AProjectileAct()
 	SphereComponent->SetCollisionProfileName(TEXT("BlockAllDynamic"));
 	RootComponent = SphereComponent;
 
-	//击中事件上注册撞击函数。
+	//事件上注册函数。
 	if (GetLocalRole() == ROLE_Authority)
 	{
 		SphereComponent->OnComponentHit.AddDynamic(this, &AProjectileAct::OnProjectileImpact);

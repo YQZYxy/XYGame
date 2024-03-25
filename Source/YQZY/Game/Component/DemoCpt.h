@@ -32,7 +32,7 @@ protected:
 	UFUNCTION()
 	void OnRep_CurrentHealth();
 
-	/** 响应要更新的生命值。修改后，立即在服务器上调用，并在客户端上调用以响应RepNotify*/
+	/** 修改后，立即在服务器上调用，并在客户端上调用以响应RepNotify*/
 	void OnHealthUpdate();
 
 public:
@@ -43,7 +43,7 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Health")
 	FORCEINLINE float GetCurrentHealth() const { return m_CurrentHealth; }
 
-	/** 当前生命值的存值函数。将此值的范围限定在0到MaxHealth之间，并调用OnHealthUpdate。仅在服务器上调用。*/
+	/**仅在服务器上调用。*/
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	void SetCurrentHealth(float healthValue);
 
@@ -58,14 +58,14 @@ protected:
 
 	bool m_bIsFiringWeapon;
 
-	/** 应仅可由本地玩家触发。*/
+	/** 应仅可由本地触发。*/
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	void StartFire();
 
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	void StopFire();
 
-	/** 用于生成投射物的服务器函数。*/
+	/** 服务器函数。*/
 	UFUNCTION(Server, Reliable)
 	void HandleFire();
 

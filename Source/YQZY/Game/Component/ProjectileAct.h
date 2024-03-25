@@ -45,7 +45,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Effects")
 	class UParticleSystem* ExplosionEffect;
 
-	//造成的伤害类型和伤害值。
+	//类型和值。
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage")
 	TSubclassOf<class UDamageType> DamageType;
 
