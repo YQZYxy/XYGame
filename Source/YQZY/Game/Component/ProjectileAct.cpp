@@ -39,11 +39,11 @@ AProjectileAct::AProjectileAct()
 	//	StaticMesh->SetRelativeScale3D(FVector(0.75f, 0.75f, 0.75f));
 	//}
 
-	static ConstructorHelpers::FObjectFinder<UParticleSystem> DefaultExplosionEffect(TEXT("/Game/StarterContent/Particles/P_Explosion.P_Explosion"));
-	if (DefaultExplosionEffect.Succeeded())
-	{
-		ExplosionEffect = DefaultExplosionEffect.Object;
-	}
+	//static ConstructorHelpers::FObjectFinder<UParticleSystem> DefaultExplosionEffect(TEXT("/Game/StarterContent/Particles/P_Explosion.P_Explosion"));
+	//if (DefaultExplosionEffect.Succeeded())
+	//{
+	//	ExplosionEffect = DefaultExplosionEffect.Object;
+	//}
 
 	//Definition for the Projectile Movement Component.
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement"));
