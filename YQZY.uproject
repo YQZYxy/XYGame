@@ -1,6 +1,6 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "{F837616B-4E85-FF64-3DA4-10B888C65C87}",
+	"EngineAssociation": "{734A0821-44EB-8BE2-C743-FA9CE4F4E83D}",
 	"Category": "Samples",
 	"Description": "",
 	"Modules": [
@@ -299,7 +299,8 @@
 			"Enabled": true,
 			"SupportedTargetPlatforms": [
 				"Win64"
-			]
+			],
+			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/362651520df94e4fa65492dbcba44ae2"
 		}
 	]
 }
