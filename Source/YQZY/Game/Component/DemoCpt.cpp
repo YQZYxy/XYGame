@@ -93,7 +93,7 @@ void ADemoCpt::StartFire()
 		m_bIsFiringWeapon = true;
 		UWorld* World = GetWorld();
 		//World->GetTimerManager().SetTimer(m_FiringTimer, this, &ADemoCpt::StopFire, m_FireRate, false);
-		SET_TIMER(m_FiringTimer,&ADemoCpt::StopFire,m_FireRate);
+		SET_TIMER(m_FiringTimer,StopFire,m_FireRate);
 		HandleFire();
 
 	}

@@ -34,8 +34,8 @@ GE_DEBUG_ITC(-1, time,color,format,##__VA_ARGS__)
 GE_DEBUG_ITC(-1, 1.0, FColor::Green,format,##__VA_ARGS__)
 
 
-#define SET_TIMER(TimerHandle, Function, Rate)\
-World->GetTimerManager().SetTimer(TimerHandle, this, Function, Rate, false);
+#define SET_TIMER(TimerHandle, FunctionName, Rate)\
+World->GetTimerManager().SetTimer(TimerHandle, this, &ThisClass::FunctionName, Rate, false);
 
-#define SET_TIMER_LOOP(TimerHandle, Function, Rate)\
-World->GetTimerManager().SetTimer(TimerHandle, this, Function, Rate, true);
+#define SET_TIMER_LOOP(TimerHandle, FunctionName, Rate)\
+World->GetTimerManager().SetTimer(TimerHandle, this, &ThisClass::FunctionName, Rate, true);
