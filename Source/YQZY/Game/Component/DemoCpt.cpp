@@ -59,6 +59,8 @@ void ADemoCpt::OnHealthUpdate()
 
 	//都执行。
 	/*
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSetBase->GetHealthAttribute()).AddUObject(this, &AGDPlayerState::HealthChanged);
+	virtual void HealthChanged(const FOnAttributeChangeData& Data);
 		
 	*/
 }
